@@ -33,7 +33,9 @@
   const lab = byId('scale-lab');
   if (lab) {
     let objectKey = 'pavilion',
-      scale = null;
+      scale = null,
+      currentObject = null,
+      currentResult = null;
     const plan = byId('scale-plan'),
       apply = byId('scale-apply');
     function label(id, x, y, text, fontSize) {
@@ -140,6 +142,8 @@
       );
     }
     function update() {
+      currentObject = null;
+      currentResult = null;
       lab
         .querySelectorAll('[data-object]')
         .forEach((button) =>
@@ -151,8 +155,6 @@
           button.setAttribute('aria-pressed', String(Number(button.dataset.scale) === scale)),
         );
       byId('custom-dimensions').hidden = objectKey !== 'custom';
-      apply.hidden = true;
-      apply.removeAttribute('href');
       let object = objects[objectKey];
       if (objectKey === 'custom') {
         object = {
@@ -170,6 +172,8 @@
         ])
           byId(id).setAttribute('aria-invalid', String(!validDimension(value)));
         if (!valid) {
+          apply.hidden = true;
+          apply.removeAttribute('href');
           draw(null, null);
           message(
             byId('scale-result'),
@@ -180,6 +184,8 @@
         }
       }
       if (!scale) {
+        apply.hidden = true;
+        apply.removeAttribute('href');
         draw(null, null);
         message(
           byId('scale-result'),
@@ -190,6 +196,8 @@
       }
       const result = calculate(object, scale);
       const best = scales.find((candidate) => calculate(object, candidate).fits);
+      currentObject = object;
+      currentResult = result;
       draw(object, result);
       let title, advice;
       if (!result.fits) {
@@ -226,7 +234,6 @@
         `${detail} Реальную детализацию согласуем по чертежам.`,
       );
       if (result.fits) {
-        apply.hidden = false;
         const query = new URLSearchParams({
           object: objectKey,
           length: String(object.width),
@@ -234,6 +241,10 @@
           scale: String(scale),
         });
         apply.href = `price.html?${query}#request`;
+        apply.hidden = false;
+      } else {
+        apply.hidden = true;
+        apply.removeAttribute('href');
       }
     }
     lab.querySelectorAll('[data-object]').forEach((button) =>
@@ -256,7 +267,8 @@
       byId('custom-width').value = '30';
       update();
     });
-    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(update).observe(plan);
+    if (typeof ResizeObserver !== 'undefined')
+      new ResizeObserver(() => draw(currentObject, currentResult)).observe(plan);
     update();
   }
   const confirmation = byId('scale-confirmation');

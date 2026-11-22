@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'self'"
+    />
+    <title> Портфолио — АРТМАКЕТ </title>
+    <meta name="theme-color" content="#103c4b" />
+    <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script src="scenes.js" defer></script>
+    <script src="scale-lab.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main"> К содержанию </a>
+    <header class="header">
+      <a class="brand" href="index.html" aria-label="АРТМАКЕТ — главная">
+        <img src="media/logo.svg" alt="АРТМАКЕТ" width="108" height="67" />
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="navigation"> Меню </button>
+      <nav id="navigation" aria-label="Основная навигация">
+        <a href="index.html#workshop"> Мастерская </a>
+        <a href="index.html#types"> Типы макетов </a>
+        <a href="portfolio.html"> Портфолио </a>
+        <a href="price.html"> Прайс-лист </a>
+      </nav>
+      <a class="contact-button" href="price.html#request">
+        <span>
+          Контакты
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 19 19 5M5 5h14v14" />
+          </svg>
+        </span>
+      </a>
+    </header>
+    <main id="main">
+      <section class="page-intro reactive">
+        <div>
+          <h1>
+            Макеты
+            <br />
+            для реальных проектов
+          </h1>
+          <p> Здания, территории, инфраструктура. Разные задачи — разная глубина проработки. </p>
+          <a class="button" href="price.html#request">
+            Обсудить свой проект
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+        </div>
+        <div class="model-scene facade-scene" data-scene="facade">
+          <canvas role="img" aria-label="Архитектурный образец конструкции фасада">
+            Архитектурный образец конструкции фасада
+          </canvas>
+        </div>
+      </section>
+      <section class="selected reactive">
+        <h2> Пансионат «Сосновая роща» </h2>
+        <p> Геленджик. Территория и подсветка в одной модели. </p>
+        <div class="diptych">
+          <figure>
+            <img
+              src="media/grove-plan.jpg"
+              alt="Пансионат «Сосновая роща», Геленджик: план территории"
+              width="1181"
+              height="886"
+              loading="lazy"
+            />
+            <figcaption> План территории </figcaption>
+          </figure>
+          <figure>
+            <img
+              src="media/grove-night.jpg"
+              alt="Пансионат «Сосновая роща», Геленджик: вечерняя подсветка"
+              width="1181"
+              height="826"
+              loading="lazy"
+            />
+            <figcaption> Вечерняя подсветка </figcaption>
+          </figure>
+        </div>
+      </section>
+      <span id="portfolio" class="anchor-alias"> </span>
+      <section class="catalog reactive" id="projects">
+        <div class="section-heading">
+          <h2> Каталог работ </h2>
+          <p id="filter-count" role="status"> 14 проектов </p>
+        </div>
+        <div class="filters" role="group" aria-label="Категории работ">
+          <button data-filter="all" aria-pressed="true"> Все работы </button>
+          <button data-filter="airports" aria-pressed="false"> Аэропорты </button>
+          <button data-filter="buildings" aria-pressed="false"> Здания и комплексы </button>
+          <button data-filter="competition" aria-pressed="false"> Конкурсные проекты </button>
+        </div>
+        <ul class="catalog-list">
+          <li class="catalog-row" data-category="airports">
+            <span> Аэропорт Толмачево, г. Новосибирск </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Детский сад "Росинка", г. Брянск </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Торговый Комплекс "Садовод", г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> МПД "Рубеж", г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Производственно-логистический центр, г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Дача Езучевских, г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Спасо-Ефимиевский монастырь, г. Суздаль </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Театр, г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Олимпийская санно-бобслейная трасса, г. Сочи </span>
+          </li>
+          <li class="catalog-row" data-category="competition">
+            <span> Конкурсный проект «Строгино», г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="airports">
+            <span> Аэропорт «Внуково», г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="buildings">
+            <span> Жилой комплекс «Дубровская Слобода», г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="airports">
+            <span> Аэропорт «Шереметьево», г. Москва </span>
+          </li>
+          <li class="catalog-row" data-category="airports">
+            <span> Вышка КДП. Аэропорт «Шереметьево», г. Москва </span>
+          </li>
+        </ul>
+      </section>
+      <section class="contacts reactive" id="contacts">
+        <div class="section-label"> Обсудим вашу задачу </div>
+        <div class="contact-layout">
+          <div>
+            <h2>
+              Начнём
+              <br />
+              с замысла.
+            </h2>
+            <p>
+              Расскажите, что должен показать макет.
+              <br />
+              Масштаб, материалы и детали обсудим вместе.
+            </p>
+            <a class="button" href="price.html#request">
+              Перейти к заявке
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+          </div>
+          <div class="addresses">
+            <a class="contact-link" href="tel:+74956403000">
+              +7 495 640-30-00
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+            <a class="contact-link" href="mailto:info@artmaket.moscow">
+              info@artmaket.moscow
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+            <dl>
+              <dt> Офис </dt>
+              <dd> Москва, Мичуринский проспект, 47 </dd>
+              <dt> Производство </dt>
+              <dd> Москва, Лужнецкая набережная, 10А, стр. 1 </dd>
+              <dt> Время работы </dt>
+              <dd> Понедельник — суббота, 10:00–19:00 </dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span> АРТМАКЕТ · Макетная мастерская, Москва </span>
+      <a href="https://artmaket.moscow/"> Действующий сайт </a>
+      <a href="https://spoki.studio/"> Сайт создан Spoki Studio </a>
+    </footer>
+  </body>
+</html>

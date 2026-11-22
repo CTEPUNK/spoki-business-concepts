@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'self'"
+    />
+    <title> Архитектурные макеты в Москве — АРТМАКЕТ </title>
+    <meta name="theme-color" content="#103c4b" />
+    <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script src="scenes.js" defer></script>
+    <script src="vendor/three-atelier.min.js" defer></script>
+    <script src="pavilion-webgl.js" defer></script>
+    <script src="scale-lab.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main"> К содержанию </a>
+    <header class="header">
+      <a class="brand" href="index.html" aria-label="АРТМАКЕТ — главная">
+        <img src="media/logo.svg" alt="АРТМАКЕТ" width="108" height="67" />
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="navigation"> Меню </button>
+      <nav id="navigation" aria-label="Основная навигация">
+        <a href="index.html#workshop"> Мастерская </a>
+        <a href="index.html#types"> Типы макетов </a>
+        <a href="portfolio.html"> Портфолио </a>
+        <a href="price.html"> Прайс-лист </a>
+      </nav>
+      <a class="contact-button" href="price.html#request">
+        <span>
+          Контакты
+          <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 19 19 5M5 5h14v14" />
+          </svg>
+        </span>
+      </a>
+    </header>
+    <main id="main">
+      <section class="hero reactive">
+        <div class="hero-copy">
+          <h1>
+            Архитектурные
+            <br />
+            макеты
+          </h1>
+          <p> Московская мастерская макетов зданий и территорий для выставок и презентаций. </p>
+          <a class="button" href="price.html#request">
+            Обсудить макет
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+          <a class="text-link" href="#scale-lab">
+            Подобрать масштаб
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+        </div>
+        <div class="model-scene pavilion-scene" data-scene="pavilion">
+          <canvas
+            role="img"
+            aria-label="Объёмная модель многоуровневого павильона с террасами и ламельной кровлей на деревянном подмакетнике"
+          >
+            Объёмная модель многоуровневого павильона с террасами и ламельной кровлей на деревянном
+            подмакетнике
+          </canvas>
+        </div>
+      </section>
+      <section class="workshop reactive" id="workshop">
+        <div>
+          <h2>
+            Мастерская
+            <br />
+            АРТМАКЕТ
+          </h2>
+        </div>
+        <div>
+          <p class="lead">
+            Изготавливаем макеты зданий, территорий и оборудования на собственном производстве в
+            Москве.
+          </p>
+          <p>
+            Цельные и разборные модели, подсветка, движущиеся элементы и электронное оснащение. От
+            технического задания до доставки и сборки на месте.
+          </p>
+          <p> Также занимаемся 3D-визуализацией. Способ подачи выбираем под задачу проекта. </p>
+        </div>
+      </section>
+      <section class="types reactive" id="types">
+        <div>
+          <h2>
+            Что должен
+            <br />
+            показать макет?
+          </h2>
+          <p>
+            От городской территории до устройства отдельного помещения. Назначение определяет
+            масштаб и детализацию.
+          </p>
+          <a class="text-link" href="price.html">
+            Сравнить стоимость
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+          <p class="small">
+            Также: художественные, рекламные и выставочные макеты, бизнес-сувениры, модели
+            автомагистралей и железных дорог.
+          </p>
+        </div>
+        <div class="type-list">
+          <details>
+            <summary>
+              Архитектурные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Здания и сооружения с фасадами, благоустройством и окружающей застройкой. </p>
+          </details>
+          <details>
+            <summary>
+              Градостроительные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Квартал, посёлок или городской ансамбль: объекты в связи с территорией. </p>
+          </details>
+          <details>
+            <summary>
+              Промышленные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Сооружения, оборудование и технологические процессы в наглядном масштабе. </p>
+          </details>
+          <details>
+            <summary>
+              Ландшафтные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Рельеф, озеленение и благоустройство для изучения территории. </p>
+          </details>
+          <details>
+            <summary>
+              Интерьерные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Пространство изнутри: планировка, отделка, мебель и цветовые решения. </p>
+          </details>
+          <details>
+            <summary>
+              Концептуальные
+              <span class="detail-mark" aria-hidden="true"> </span>
+            </summary>
+            <p> Главная идея проекта и его объёмы без избыточной проработки деталей. </p>
+          </details>
+        </div>
+      </section>
+      <section class="material-chapter reactive" id="materials">
+        <div class="chapter-copy">
+          <h2>
+            Материал задаёт
+            <br />
+            характер модели
+          </h2>
+          <p>
+            Глухие объёмы, прозрачное остекление и основание работают вместе. На образце — как
+            отдельные пластины складываются в цельный предмет.
+          </p>
+          <p class="small">
+            Материалы и отделку конкретного макета согласуем в техническом задании.
+          </p>
+        </div>
+        <div class="model-scene materials-scene" data-scene="materials">
+          <canvas
+            role="img"
+            aria-label="Разнесённые матовые, прозрачные и деревянные пластины собираются в стопу"
+          >
+            Разнесённые матовые, прозрачные и деревянные пластины собираются в стопу
+          </canvas>
+        </div>
+      </section>
+      <section class="facade-chapter reactive" id="facade">
+        <div class="model-scene facade-scene" data-scene="facade">
+          <canvas
+            role="img"
+            aria-label="Сечение фасада: остекление и импосты отделяются от перекрытий и опор"
+          >
+            Сечение фасада: остекление и импосты отделяются от перекрытий и опор
+          </canvas>
+        </div>
+        <div class="chapter-copy">
+          <h2>
+            Детали объясняют
+            <br />
+            архитектуру
+          </h2>
+          <p>
+            Ритм опор, глубина навеса, шаг остекления. При раскрытии фасада видна связь оболочки и
+            внутренней конструкции.
+          </p>
+          <p> Для концепции важен силуэт. Для выставки — материалы, фасады и окружение. </p>
+        </div>
+      </section>
+      <span id="drawing" class="anchor-alias"> </span>
+      <section id="scale-lab" class="scale-lab reactive">
+        <div class="section-heading">
+          <div>
+            <h2> Подберите масштаб </h2>
+            <p> Сохраните детали и оставьте место вокруг здания. </p>
+          </div>
+          <p>
+            Подмакетник 60 × 40 см.
+            <br />
+            Свободный край — не менее 3 см с каждой стороны.
+          </p>
+        </div>
+        <div class="lab-layout">
+          <div>
+            <fieldset id="object-options">
+              <legend> Что разместим на столе? </legend>
+              <button type="button" data-object="pavilion" aria-pressed="true">
+                Павильон · 48 × 30 м
+              </button>
+              <button type="button" data-object="house" aria-pressed="false">
+                Дом · 24 × 14 м
+              </button>
+              <button type="button" data-object="district" aria-pressed="false">
+                Квартал · 96 × 60 м
+              </button>
+              <button type="button" data-object="custom" aria-pressed="false">Свой объект</button>
+            </fieldset>
+            <div class="custom-dimensions" id="custom-dimensions" hidden>
+              <p class="small" id="custom-help"
+                >Габариты всей территории: от 0,1 до 300 м по каждой стороне.</p
+              >
+              <label class="field"
+                >Длина, м<input
+                  id="custom-length"
+                  inputmode="decimal"
+                  type="text"
+                  aria-describedby="custom-help custom-error"
+                  value="48"
+              /></label>
+              <label class="field"
+                >Ширина, м<input
+                  id="custom-width"
+                  inputmode="decimal"
+                  type="text"
+                  aria-describedby="custom-help custom-error"
+                  value="30"
+              /></label>
+              <p id="custom-error" role="status"></p>
+            </div>
+            <fieldset id="scale-options">
+              <legend> Масштаб </legend>
+              <button type="button" data-scale="50" aria-pressed="false"> 1:50 </button>
+              <button type="button" data-scale="100" aria-pressed="false"> 1:100 </button>
+              <button type="button" data-scale="200" aria-pressed="false"> 1:200 </button>
+              <button type="button" data-scale="500" aria-pressed="false"> 1:500 </button>
+            </fieldset>
+            <button type="button" class="text-button" id="scale-reset"> Начать заново </button>
+          </div>
+          <div class="lab-result">
+            <svg
+              id="scale-plan"
+              viewBox="0 0 720 520"
+              role="img"
+              aria-label="План макета относительно подмакетника"
+            >
+              <rect class="table-plan" x="60" y="60" width="600" height="400" rx="4" />
+              <g id="plan-object" hidden>
+                <path id="building-plan" />
+                <path id="building-lines" />
+              </g>
+              <rect class="table-outline" x="60" y="60" width="600" height="400" rx="4" />
+              <rect class="safe-plan" x="90" y="90" width="540" height="340" />
+              <text id="table-width" text-anchor="middle">Стол 60 см</text>
+              <text id="table-depth" text-anchor="middle">40 см</text>
+              <text id="model-width" class="object-dimension" text-anchor="middle"></text>
+              <text id="model-depth" class="object-dimension" text-anchor="middle"></text>
+            </svg>
+            <div id="scale-result" role="status" aria-live="polite"> </div>
+            <a id="scale-apply" class="button" hidden>
+              В заявку
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <noscript>
+          Для расчёта масштаба включите JavaScript. Размер в сантиметрах = размер в метрах × 100 /
+          знаменатель масштаба.
+        </noscript>
+      </section>
+      <section class="selected reactive">
+        <div class="section-heading">
+          <div>
+            <h2> Готовая работа </h2>
+            <p> Пансионат «Сосновая роща», Геленджик </p>
+          </div>
+          <a class="text-link" href="portfolio.html">
+            Портфолио
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+        </div>
+        <div class="diptych">
+          <figure>
+            <img
+              src="media/grove-plan.jpg"
+              alt="Пансионат «Сосновая роща», Геленджик: план территории"
+              width="1181"
+              height="886"
+              loading="lazy"
+            />
+            <figcaption> План территории </figcaption>
+          </figure>
+          <figure>
+            <img
+              src="media/grove-night.jpg"
+              alt="Пансионат «Сосновая роща», Геленджик: вечерняя подсветка"
+              width="1181"
+              height="826"
+              loading="lazy"
+            />
+            <figcaption> Вечерняя подсветка </figcaption>
+          </figure>
+        </div>
+      </section>
+      <section class="process reactive" id="process">
+        <div class="section-heading">
+          <h2>
+            От задания
+            <br />
+            до выставочного стола
+          </h2>
+          <a class="button" href="price.html#request">
+            Составить заявку
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" />
+            </svg>
+          </a>
+        </div>
+        <ol class="process-steps">
+          <li>
+            <h3> Задача и чертежи </h3>
+            <p>
+              Обсуждаем масштаб, назначение и детализацию. Готовим техническое задание и
+              индивидуальную смету.
+            </p>
+          </li>
+          <li>
+            <h3> Изготовление </h3>
+            <p>
+              После согласования и предоплаты подбираем материалы и начинаем работу. Проект ведёт
+              персональный менеджер.
+            </p>
+          </li>
+          <li>
+            <h3> Доставка и сборка </h3>
+            <p>
+              Готовим транспортировочную упаковку. При необходимости собираем на месте и подключаем
+              электронику.
+            </p>
+          </li>
+        </ol>
+        <p> Обслуживание и реставрация. Гарантия — 1 год, под защитным колпаком — 2 года. </p>
+      </section>
+      <section class="contacts reactive" id="contacts">
+        <div class="section-label"> Обсудим вашу задачу </div>
+        <div class="contact-layout">
+          <div>
+            <h2>
+              Начнём
+              <br />
+              с замысла.
+            </h2>
+            <p>
+              Расскажите, что должен показать макет.
+              <br />
+              Масштаб, материалы и детали обсудим вместе.
+            </p>
+            <a class="button" href="price.html#request">
+              Перейти к заявке
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+          </div>
+          <div class="addresses">
+            <a class="contact-link" href="tel:+74956403000">
+              +7 495 640-30-00
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+            <a class="contact-link" href="mailto:info@artmaket.moscow">
+              info@artmaket.moscow
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+            <dl>
+              <dt> Офис </dt>
+              <dd> Москва, Мичуринский проспект, 47 </dd>
+              <dt> Производство </dt>
+              <dd> Москва, Лужнецкая набережная, 10А, стр. 1 </dd>
+              <dt> Время работы </dt>
+              <dd> Понедельник — суббота, 10:00–19:00 </dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span> АРТМАКЕТ · Макетная мастерская, Москва </span>
+      <a href="https://artmaket.moscow/"> Действующий сайт </a>
+      <a href="https://spoki.studio/"> Сайт создан Spoki Studio </a>
+    </footer>
+  </body>
+</html>

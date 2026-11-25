@@ -58,7 +58,7 @@ def source_note(f):
     return '<figcaption class="photo-note">Фото — '+a+'</figcaption>'
 def finder(p="",examples=False):
     return f'''<form class="finder" role="search" action="{p}search.html" method="get">
-    <div class="lookup"><div class="field-row">{LOUPE}<input type="search" name="q" aria-label="Русское или латинское название рыбы" placeholder="Вид или латинское название" autocomplete="off" maxlength="120"><button class="btn primary" type="submit">Найти{ARROW}</button></div>
+    <div class="lookup"><div class="field-row">{LOUPE}<input type="search" name="q" aria-label="Русское или латинское название рыбы" placeholder="Название или латынь" autocomplete="off" maxlength="120"><button class="btn primary" type="submit">Найти{ARROW}</button></div>
     <div class="suggestions" aria-label="Подсказки поиска" hidden></div></div></form>'''+(f'<div class="examples"><span>Например</span>{anchor(p+"search.html?q=Скалярия","скалярия")}{anchor(p+"search.html?q=Acantopsis","Acantopsis")}</div>' if examples else '')
 def header(p,active):
     main=[("catalog.html","Каталог","catalog"),("arrivals.html","Поступления","arrivals"),("price.html","Прайс","price"),("services.html","Услуги","services")]

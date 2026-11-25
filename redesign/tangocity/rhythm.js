@@ -8,11 +8,12 @@
   const dance=stage.querySelector(".winning-dance"), pose=danceArtist(dance.querySelector("svg"));
   const lamps=[...stage.querySelectorAll(".beat-score span")];
   const interval=750, tolerance=170, countIn=4, total=lamps.length;
-  let mode="idle", start=0, nextClick=0, frame=0, previousBeat=-1, finishAt=0, lastTap=-Infinity;
+  let mode="idle", start=0, frame=0, previousBeat=-1, finishAt=0, lastTap=-Infinity, audioVersion=0;
   let mistakes=0, soundOn=true, audio=null;
   const hits=new Set(), activeClicks=new Set();
   function reset() {
     cancelAnimationFrame(frame); frame=0;
+    audioVersion++;
     for (const osc of activeClicks) { try {osc.stop();} catch {} }
     activeClicks.clear();
     mode="idle"; hits.clear();mistakes=0;lastTap=-Infinity;previousBeat=-1;
@@ -22,19 +23,24 @@
     needle.style.transform="rotate(-20deg)";
     tap.textContent="Запустить метроном"; status.textContent="80 ударов в минуту";readout.textContent="80 уд/мин";
   }
-  function enableAudio() {
-    if (!soundOn) return;
+  async function scheduleAudio(starting=false) {
+    const version=++audioVersion;
+    if (!soundOn || mode!=="play") return;
     try {
       const Engine=window.AudioContext || window.webkitAudioContext;
       if (!Engine) return;
       audio ||= new Engine();
-      if (audio.state==="suspended") audio.resume().catch(()=>{});
-    } catch { audio=null; }
+      if (audio.state!=="running") await audio.resume();
+      if (version!==audioVersion || !soundOn || mode!=="play") return;
+      const now=performance.now();
+      if (starting && now>=start && previousBeat<1) start=now+160;
+      const origin=audio.currentTime+(start-now)/1000;
+      const first=Math.max(0,Math.ceil((now-start-30)/interval));
+      for(let n=first;n<countIn+total;n++) tick(Math.max(audio.currentTime,origin+n*interval/1000),n%4===0);
+    } catch { /* The pendulum and beat indicator continue when audio is unavailable. */ }
   }
-  function tick(time,accent) {
-    if (!soundOn || audio?.state!=="running") return;
+  function tick(at,accent) {
     const osc=audio.createOscillator(), gain=audio.createGain();
-    const at=audio.currentTime+Math.max(0,(time-performance.now())/1000);
     osc.type="sine";osc.frequency.value=accent?1340:925;
     gain.gain.setValueAtTime(.0001,at);
     gain.gain.exponentialRampToValueAtTime(.16,at+.002);
@@ -58,11 +64,6 @@
     frame=0;
     if (mode==="play") {
       const beat=(now-start)/interval;
-      while(nextClick<countIn+total && start+nextClick*interval<=now+105) {
-        const when=start+nextClick*interval;
-        if (when>=now-40) tick(when,nextClick%4===0);
-        nextClick++;
-      }
       const slot=Math.floor(beat);
       const phase=beat-slot;
       if (!reduceMotion.matches) needle.style.transform="rotate("+(-22*Math.cos(Math.PI*Math.max(0,beat))).toFixed(2)+"deg)";
@@ -85,7 +86,7 @@
     if (mode==="play" || mode==="dance") frame=requestAnimationFrame(draw);
   }
   function begin() {
-    reset();enableAudio();mode="play";start=performance.now()+240;nextClick=0;
+    reset();mode="play";start=performance.now()+240;scheduleAudio(true);
     tap.textContent="Отбить долю";stop.hidden=false;status.textContent="Четыре удара для вступления";
     frame=requestAnimationFrame(draw);
   }
@@ -108,8 +109,11 @@
   stop.addEventListener("click",()=>{reset();tap.focus();});
   sound.addEventListener("click",()=>{
     soundOn=!soundOn;sound.setAttribute("aria-pressed",String(soundOn));
-    if (soundOn) enableAudio();
-    else for(const osc of activeClicks) {try{osc.stop();}catch{}}
+    if (soundOn) scheduleAudio();
+    else {
+      audioVersion++;
+      for(const osc of activeClicks) {try{osc.stop();}catch{}}
+    }
   });
   function pauseIfPlaying() {if(mode==="play" || mode==="dance") reset();}
   document.addEventListener("visibilitychange",()=>{if(document.hidden)pauseIfPlaying();});

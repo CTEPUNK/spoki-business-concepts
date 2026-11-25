@@ -11,12 +11,13 @@
     <title> Архитектурные макеты в Москве — АРТМАКЕТ </title>
     <meta name="theme-color" content="#103c4b" />
     <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=49cec94c3753" />
-    <script src="app.js?v=0d69850b4f4d" defer></script>
+    <link rel="stylesheet" href="styles.css?v=3b0973badb71" />
+    <script src="app.js?v=edfc57865646" defer></script>
     <script src="scenes.js?v=fbbff37ea2a8" defer></script>
     <script src="vendor/three-atelier.min.js?v=3257c73f5723" defer></script>
     <script src="pavilion-webgl.js?v=097939724df5" defer></script>
-    <script src="scale-lab.js?v=ba66946fffcf" defer></script>
+    <script src="quarter-view.js?v=520a7313a38e" defer></script>
+    <script src="quarter.js?v=cfb5bb3bc75a" defer></script>
   </head>
   <body>
     <a class="skip" href="#main"> К содержанию </a>
@@ -60,8 +61,8 @@
                 <path d="M5 19 19 5M5 5h14v14" />
               </svg>
             </a>
-            <a class="text-link" href="#scale-lab"
-              >Подобрать масштаб
+            <a class="button build-link" href="#quarter-studio"
+              >Собрать квартал
               <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M5 19 19 5M5 5h14v14" /></svg
             ></a>
@@ -77,94 +78,131 @@
           </canvas>
         </div>
       </section>
-      <section class="workshop" id="workshop">
-        <div>
-          <h2>
-            Мастерская
-            <br />
-            АРТМАКЕТ
-          </h2>
+      <section id="workshop" class="workshop-edition">
+        <div class="edition-copy">
+          <h2>Мастерская<br />АРТМАКЕТ</h2>
+          <p class="edition-lead">В Москве собираем цельные и разборные макеты.</p>
         </div>
-        <div>
-          <p
-            >На нашем производстве в Москве собираем цельные и разборные макеты. Для выставки можно
-            предусмотреть съёмные части и транспортировочный кофр.</p
+        <figure class="case-plate">
+          <img
+            src="media/workshop-case.svg"
+            width="470"
+            height="400"
+            alt="Павильон с пилообразной кровлей на съёмном основании, ниже — открытый кофр с замками."
+          />
+          <figcaption
+            ><b>Макет в разборе</b><span>Съёмное основание и кофр для перевозки</span></figcaption
           >
-          <p
-            >Для презентации на экране предлагаем 3D-визуализацию, для показа в дополненной или
-            виртуальной реальности — 3D-анимацию макета.</p
+        </figure>
+        <dl class="formats">
+          <dt>В выставочном зале</dt
+          ><dd>Для выездного показа предусматриваем съёмные части и транспортировочный кофр.</dd>
+          <dt>На экране</dt
+          ><dd
+            >3D-визуализация для презентаций. Для дополненной и виртуальной реальности — 3D-анимация
+            макета.</dd
           >
-        </div>
+        </dl>
       </section>
-      <section class="types" id="types">
-        <div>
-          <h2>
-            Что должен
-            <br />
-            показать макет?
-          </h2>
-          <p>
-            От городской территории до устройства отдельного помещения. Назначение определяет
-            масштаб и детализацию.
-          </p>
-          <a class="text-link" href="price.html">
-            Сравнить стоимость
-            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 19 19 5M5 5h14v14" />
-            </svg>
-          </a>
-          <p
-            >Для выставочных и рекламных макетов меняем привычный масштаб предмета. Например,
-            выставочный флакон Librederm мастерская увеличила в 15 раз.</p
-          >
-          <p
-            >Другие направления — художественные миниатюры, бизнес-сувениры, модели автомагистралей
-            и железных дорог.</p
-          >
-        </div>
-        <div class="type-list">
-          <details open>
-            <summary>
-              Архитектурные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Здания и сооружения с фасадами, благоустройством и окружающей застройкой. </p>
-          </details>
-          <details>
-            <summary>
-              Градостроительные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Квартал, посёлок или городской ансамбль: объекты в связи с территорией. </p>
-          </details>
-          <details>
-            <summary>
-              Промышленные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Сооружения, оборудование и технологические процессы в наглядном масштабе. </p>
-          </details>
-          <details>
-            <summary>
-              Ландшафтные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Рельеф, озеленение и благоустройство для изучения территории. </p>
-          </details>
-          <details>
-            <summary>
-              Интерьерные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Пространство изнутри: планировка, отделка, мебель и цветовые решения. </p>
-          </details>
-          <details>
-            <summary>
-              Концептуальные
-              <span class="detail-mark" aria-hidden="true"> </span>
-            </summary>
-            <p> Главная идея проекта и его объёмы без избыточной проработки деталей. </p>
-          </details>
+      <section id="types" class="types-edition">
+        <h2>Что должен показать макет?</h2>
+        <div class="catalog-spread">
+          <figure class="bottle-plate">
+            <div class="bottle-ratio">15<span>:1</span></div>
+            <img
+              src="media/bottle-study.svg"
+              width="350"
+              height="268"
+              alt="Схема в одной пропорции. Слева в круге исходный предмет, справа увеличенный макет."
+            />
+            <figcaption
+              ><h3>Флакон для Librederm</h3
+              ><p>Для выставки мастерская увеличила флакон в 15 раз.</p></figcaption
+            >
+          </figure>
+          <div>
+            <div class="type-list">
+              <details open>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path
+                      d="M4 26V14L20 6l15 7v13l-16 8z M4 14l15 7 16-8 M19 21v13 M9 20v5m5-3v5m10-5v5m6-8v5"
+                    />
+                  </svg>
+                  Архитектурные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Здания и сооружения с фасадами, благоустройством и окружающей застройкой. </p>
+              </details>
+              <details>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path
+                      d="M2 22l17-8 19 8-19 10z M6 20v-7l6-3 6 3v7l-6 3z M6 13l6 3 6-3m-6 3v7 M21 21V9l6-3 6 3v12l-6 3z M21 9l6 3 6-3m-6 3v12"
+                    />
+                  </svg>
+                  Градостроительные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Квартал, посёлок или городской ансамбль: объекты в связи с территорией. </p>
+              </details>
+              <details>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path d="M3 30V18l8-6v6l8-6v6l8-6v18z M28 27h6L32 6h-3z M7 23h3m4 0h3m4 0h3" />
+                  </svg>
+                  Промышленные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Сооружения, оборудование и технологические процессы в наглядном масштабе. </p>
+              </details>
+              <details>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path
+                      d="M2 28q8-11 17-6t18-3 M4 32q9-9 17-5t15-2 M16 22V10m-6 7 6-10 6 10z M26 19V9m-4 4 4-8 5 8z"
+                    />
+                  </svg>
+                  Ландшафтные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Рельеф, озеленение и благоустройство для изучения территории. </p>
+              </details>
+              <details>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path
+                      d="M3 24V10l13-6v15l19 8-13 7z M3 24l13-5 M9 23v-5l7-3 8 4v5l-7 3z M9 18l8 4 7-3m-7 3v5"
+                    />
+                  </svg>
+                  Интерьерные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Пространство изнутри: планировка, отделка, мебель и цветовые решения. </p>
+              </details>
+              <details>
+                <summary class="type-entry"
+                  ><svg class="type-glyph" viewBox="0 0 40 40" aria-hidden="true">
+                    <path
+                      d="M3 26l15 5 18-8-15-5z M10 21V10l10-5 10 5v11l-10 5z M10 10l10 5 10-5m-10 5v11"
+                    />
+                  </svg>
+                  Концептуальные
+                  <span class="detail-mark" aria-hidden="true"> </span>
+                </summary>
+                <p> Главная идея проекта и его объёмы без избыточной проработки деталей. </p>
+              </details>
+            </div>
+            <p class="also-types"
+              >Также изготавливаем художественные миниатюры, бизнес-сувениры, модели автомагистралей
+              и железных дорог.</p
+            >
+            <a class="text-link" href="price.html"
+              >Сравнить стоимость
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" /></svg
+            ></a>
+          </div>
         </div>
       </section>
       <section class="material-chapter" id="materials">
@@ -206,97 +244,53 @@
           >
         </div>
       </section>
-      <span id="drawing" class="anchor-alias"> </span>
-      <section id="scale-lab" class="scale-lab">
-        <div class="section-heading">
-          <div>
-            <h2> Подберите масштаб </h2>
-            <p> Сохраните детали и оставьте место вокруг здания. </p>
-          </div>
-          <p>
-            Подмакетник 60 × 40 см.
-            <br />
-            Свободный край — не менее 3 см с каждой стороны.
-          </p>
-        </div>
-        <div class="lab-layout">
-          <div>
-            <fieldset id="object-options">
-              <legend> Что разместим на столе? </legend>
-              <button type="button" data-object="pavilion" aria-pressed="true">
-                Павильон · 48 × 30 м
-              </button>
-              <button type="button" data-object="house" aria-pressed="false">
-                Дом · 24 × 14 м
-              </button>
-              <button type="button" data-object="district" aria-pressed="false">
-                Квартал · 96 × 60 м
-              </button>
-              <button type="button" data-object="custom" aria-pressed="false">Свой объект</button>
-            </fieldset>
-            <div class="custom-dimensions" id="custom-dimensions" hidden>
-              <p class="small" id="custom-help"
-                >Габариты всей территории: от 0,1 до 300 м по каждой стороне.</p
-              >
-              <label class="field"
-                >Длина, м<input
-                  id="custom-length"
-                  inputmode="decimal"
-                  type="text"
-                  aria-describedby="custom-help custom-error"
-                  value="48"
-              /></label>
-              <label class="field"
-                >Ширина, м<input
-                  id="custom-width"
-                  inputmode="decimal"
-                  type="text"
-                  aria-describedby="custom-help custom-error"
-                  value="30"
-              /></label>
-              <p id="custom-error" role="status"></p>
-            </div>
-            <fieldset id="scale-options">
-              <legend> Масштаб </legend>
-              <button type="button" data-scale="50" aria-pressed="false"> 1:50 </button>
-              <button type="button" data-scale="100" aria-pressed="false"> 1:100 </button>
-              <button type="button" data-scale="200" aria-pressed="false"> 1:200 </button>
-              <button type="button" data-scale="500" aria-pressed="false"> 1:500 </button>
-            </fieldset>
-            <button type="button" class="text-button" id="scale-reset"> Начать заново </button>
-          </div>
-          <div class="lab-result">
+      <div id="drawing"></div><div id="scale-lab"></div>
+      <section id="quarter-studio" class="quarter-studio">
+        <h2>Соберите свой квартал</h2>
+        <p
+          >Перенесите деталь на макет или выберите участок, а затем деталь. Вечером на набережной
+          зажгутся фонари.</p
+        >
+        <div class="quarter-layout" id="quarter-editor" hidden>
+          <fieldset class="quarter-plots"
+            ><legend id="piece-legend">Участок</legend
+            ><div class="plot-options" id="plot-options"></div
+          ></fieldset>
+          <figure class="quarter-board">
             <svg
-              id="scale-plan"
-              viewBox="0 0 720 520"
+              id="quarter-model"
+              viewBox="24 0 632 360"
               role="img"
-              aria-label="План макета относительно подмакетника"
-            >
-              <rect class="table-plan" x="60" y="60" width="600" height="400" rx="4" />
-              <g id="plan-object" hidden>
-                <path id="building-plan" />
-                <path id="building-lines" />
-              </g>
-              <rect class="table-outline" x="60" y="60" width="600" height="400" rx="4" />
-              <rect class="safe-plan" x="90" y="90" width="540" height="340" />
-              <text id="table-width" text-anchor="middle">Стол 60 см</text>
-              <text id="table-depth" text-anchor="middle">40 см</text>
-              <text id="model-width" class="object-dimension" text-anchor="middle"></text>
-              <text id="model-depth" class="object-dimension" text-anchor="middle"></text>
-            </svg>
-            <div id="scale-result" role="status" aria-live="polite"> </div>
-            <a id="scale-apply" class="button" hidden>
-              В заявку
+              aria-labelledby="quarter-description"
+            ></svg>
+            <figcaption aria-live="polite"
+              ><strong id="quarter-stage"></strong
+              ><span id="quarter-description" class="sr-only"></span
+            ></figcaption>
+          </figure>
+          <fieldset class="quarter-tray"
+            ><legend>Лоток деталей</legend><div id="piece-options"></div
+          ></fieldset>
+          <div class="quarter-tools">
+            <fieldset
+              ><legend>Освещение</legend><div id="light-options" class="light-options"></div
+            ></fieldset>
+            <a class="button" id="quarter-apply" href="price.html#request"
+              >Перенести в заявку
               <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 19 19 5M5 5h14v14" />
-              </svg>
-            </a>
+                <path d="M5 19 19 5M5 5h14v14" /></svg
+            ></a>
+            <button id="quarter-reset" class="text-button" type="button">Начать сначала</button>
           </div>
         </div>
-        <noscript>
-          Для расчёта масштаба включите JavaScript. Размер в сантиметрах = размер в метрах × 100 /
-          знаменатель масштаба.
-        </noscript>
+        <noscript
+          ><p
+            >В градостроительном макете здания, дорожки и озеленение показывают вместе.
+            <a class="text-link" href="price.html#request"
+              >Связаться с мастерской
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" /></svg></a></p
+        ></noscript>
       </section>
       <section class="selected">
         <div class="section-heading">

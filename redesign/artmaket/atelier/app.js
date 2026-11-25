@@ -78,14 +78,14 @@ if (form) {
     validateContact();
     for (const id of ['size', 'wishes']) {
       const field = document.getElementById(id);
-      field.setCustomValidity(field.value.trim() ? '' : 'Заполните это поле.');
+      field.setCustomValidity(!field.required || field.value.trim() ? '' : 'Заполните это поле.');
     }
     if (!form.reportValidity()) return;
     form.reset();
     form.hidden = true;
     success.hidden = false;
     success.focus();
-    document.querySelector('#scale-confirmation').hidden = true;
+    form.dispatchEvent(new Event('demo-checked'));
   }
   for (const id of ['size', 'wishes'])
     document

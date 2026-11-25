@@ -11,10 +11,11 @@
     <title> Прайс-лист и заявка — АРТМАКЕТ </title>
     <meta name="theme-color" content="#103c4b" />
     <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=49cec94c3753" />
-    <script src="app.js?v=0d69850b4f4d" defer></script>
+    <link rel="stylesheet" href="styles.css?v=3b0973badb71" />
+    <script src="app.js?v=edfc57865646" defer></script>
     <script src="scenes.js?v=fbbff37ea2a8" defer></script>
-    <script src="scale-lab.js?v=ba66946fffcf" defer></script>
+    <script src="quarter-view.js?v=520a7313a38e" defer></script>
+    <script src="quarter.js?v=cfb5bb3bc75a" defer></script>
   </head>
   <body>
     <a class="skip" href="#main"> К содержанию </a>
@@ -267,7 +268,50 @@
         </div>
         <div>
           <form id="request-form" method="dialog" aria-describedby="demo-note">
-            <div id="scale-confirmation" hidden> </div>
+            <div id="quarter-confirmation" class="request-composition" hidden>
+              <h3>Ваш квартал</h3
+              ><svg
+                id="request-preview"
+                class="composition-preview"
+                viewBox="24 0 632 360"
+                aria-hidden="true"
+              ></svg>
+              <p data-description></p>
+              <a class="text-link" data-return
+                >Вернуться к макету
+                <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 19 19 5M5 5h14v14" /></svg
+              ></a>
+            </div>
+            <fieldset id="legacy-dimensions" hidden disabled
+              ><legend>Исходные параметры</legend>
+              <label class="field"
+                >Длина объекта, м<input
+                  id="original-length"
+                  type="number"
+                  min="0.1"
+                  max="300"
+                  step="any"
+                  required
+              /></label>
+              <label class="field"
+                >Ширина объекта, м<input
+                  id="original-width"
+                  type="number"
+                  min="0.1"
+                  max="300"
+                  step="any"
+                  required
+              /></label>
+              <label class="field"
+                >Знаменатель масштаба<input
+                  id="original-scale"
+                  type="number"
+                  min="1"
+                  step="1"
+                  required
+              /></label>
+            </fieldset>
             <label class="field">
               Объект
               <input id="object-name" maxlength="120" placeholder="Название вашего объекта" />
@@ -321,8 +365,7 @@
                 rows="4"
                 maxlength="2000"
                 placeholder="Назначение, детализация, подсветка, желаемый срок"
-              >
-              </textarea>
+              ></textarea>
             </label>
             <label class="field">
               Телефон или электронная почта
@@ -355,6 +398,19 @@
                 <path d="M5 19 19 5M5 5h14v14" />
               </svg>
             </a>
+            <div id="quarter-receipt" hidden
+              ><svg
+                id="receipt-preview"
+                class="composition-preview"
+                viewBox="24 0 632 360"
+                aria-hidden="true"
+              ></svg>
+              <p data-description></p
+              ><a class="text-link" data-return
+                >Вернуться к макету
+                <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 19 19 5M5 5h14v14" /></svg></a
+            ></div>
             <button class="text-button" id="form-repeat"> Заполнить заново </button>
           </div>
         </div>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 268">
+  <title>Выставочный флакон и исходный предмет в одном масштабе сравнения</title>
+  <defs>
+    <linearGradient id="body">
+      <stop stop-color="#cdb5a3"/><stop offset=".16" stop-color="#f2e4cf"/>
+      <stop offset=".33" stop-color="#fff8e9"/><stop offset=".72" stop-color="#efe2cf"/>
+      <stop offset="1" stop-color="#bba89b"/>
+    </linearGradient>
+    <linearGradient id="cap"><stop stop-color="#494347"/><stop offset=".32" stop-color="#989492"/><stop offset=".47" stop-color="#c0bbb1"/><stop offset="1" stop-color="#524d4f"/></linearGradient>
+    <g id="flacon" stroke="#4b383b" stroke-width="1.4">
+      <path d="M8 67Q8 55 23 51L31 48V40H70V48L78 51Q94 55 94 67V195Q94 205 84 207Q51 212 18 207Q8 205 8 195Z" fill="url(#body)"/>
+      <path d="M29 12Q51 5 72 12V43Q51 49 29 43Z" fill="url(#cap)"/>
+      <ellipse cx="50.5" cy="12" rx="21.5" ry="4" fill="#bdb8ae"/>
+      <path d="M9 95Q50 100 93 95V157Q48 162 9 157Z" fill="#f5e9d5" stroke="none"/>
+      <path d="M9 101Q50 106 93 101M9 151Q50 156 93 151" fill="none" stroke="#a28578"/>
+      <text x="51" y="130" fill="#603845" stroke="none" font-family="Arial,sans-serif" text-anchor="middle" font-size="10" letter-spacing="1">LIBREDERM</text>
+    </g>
+  </defs>
+  <g stroke="#e3bbb3" fill="none" stroke-width=".9">
+    <path d="M15 231H330M285 29V231M278 29H292M278 231H292"/>
+    <path stroke-dasharray="3 5" d="M122 29H276M32 218H115"/>
+  </g>
+  <use href="#flacon" transform="translate(142 21)"/>
+  <use href="#flacon" transform="translate(66 217) scale(.06667)"/>
+  <circle cx="69.5" cy="224" r="15" fill="none" stroke="#e3bbb3"/>
+</svg>

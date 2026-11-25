@@ -223,7 +223,7 @@
     const lines=$('#lines');lines.replaceChildren();
     for(const code of ids) {
       const item=byCode.get(code);
-      const row=document.createElement('article');row.className='cart-row';row.dataset.line=code;
+      const row=document.createElement('article');row.className='cart-row';row.dataset.line=code;row.dataset.pointerFrame='';
       row.innerHTML='<div><p class="item-code"></p><h3></h3><p class="allocation"></p><p class="calc"></p><p class="row-money"></p></div><div><label class="field-small" for="line-'+code+'">Кол-во, '+item.unit+'</label><input class="quantity" type="text" inputmode="numeric" pattern="[0-9]+" id="line-'+code+'" aria-describedby="line-err-'+code+'" autocomplete="off"><small class="error" id="line-err-'+code+'" hidden></small></div><button type="button" class="remove">'+glyph('trash')+'</button>';
       $('.item-code',row).textContent=code==='cord'?'Изготовление на заказ':'Арт. '+code;
       $('h3',row).textContent=item.name;

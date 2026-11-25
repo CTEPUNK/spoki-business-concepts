@@ -11,9 +11,9 @@
     <title> Портфолио — АРТМАКЕТ </title>
     <meta name="theme-color" content="#103c4b" />
     <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=e9a1c059d7f2" />
-    <script src="app.js" defer></script>
-    <script src="scenes.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=49cec94c3753" />
+    <script src="app.js?v=0d69850b4f4d" defer></script>
+    <script src="scenes.js?v=fbbff37ea2a8" defer></script>
     <script src="scale-lab.js?v=ba66946fffcf" defer></script>
   </head>
   <body>
@@ -26,7 +26,8 @@
       <nav id="navigation" aria-label="Основная навигация">
         <a href="index.html#workshop"> Мастерская </a>
         <a href="index.html#types"> Типы макетов </a>
-        <a href="portfolio.html"> Портфолио </a>
+        <a href="index.html#process"> Схема работы </a>
+        <a aria-current="page" href="portfolio.html"> Портфолио </a>
         <a href="price.html"> Прайс-лист </a>
       </nav>
       <a class="contact-button" href="price.html#request">
@@ -39,20 +40,21 @@
       </a>
     </header>
     <main id="main">
-      <section class="page-intro reactive">
+      <section class="page-intro">
         <div>
-          <h1>
-            Макеты
-            <br />
-            для реальных проектов
-          </h1>
-          <p> Здания, территории, инфраструктура. Разные задачи — разная глубина проработки. </p>
+          <h1>Портфолио мастерской</h1>
+          <p>От диспетчерской башни в масштабе 1:72 до аэропорта Внуково в масштабе 1:2000.</p>
           <a class="button" href="price.html#request">
             Обсудить свой проект
             <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 19 19 5M5 5h14v14" />
             </svg>
           </a>
+          <a class="text-link" href="#projects"
+            >Каталог работ
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" /></svg
+          ></a>
         </div>
         <div class="model-scene facade-scene" data-scene="facade">
           <canvas role="img" aria-label="Архитектурный образец конструкции фасада">
@@ -60,9 +62,12 @@
           </canvas>
         </div>
       </section>
-      <section class="selected reactive">
+      <section class="selected">
         <h2> Пансионат «Сосновая роща» </h2>
-        <p> Геленджик. Территория и подсветка в одной модели. </p>
+        <p>
+          Геленджик, масштаб 1:200. Корпуса, озеленение и бассейн выполнены из полимеров и
+          оргстекла. На вечернем снимке видна подсветка территории.
+        </p>
         <div class="diptych">
           <figure>
             <img
@@ -87,7 +92,7 @@
         </div>
       </section>
       <span id="portfolio" class="anchor-alias"> </span>
-      <section class="catalog reactive" id="projects">
+      <section class="catalog" id="projects">
         <div class="section-heading">
           <h2> Каталог работ </h2>
           <p id="filter-count" role="status"> 14 проектов </p>
@@ -101,12 +106,24 @@
         <ul class="catalog-list">
           <li class="catalog-row" data-category="airports">
             <span> Аэропорт Толмачево, г. Новосибирск </span>
+            <p
+              >1:72. Диспетчерский пункт вырезали лазером из оргстекла. Подсветили крышу и башню,
+              чтобы выделить рабочую зону диспетчеров.</p
+            >
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> Детский сад "Росинка", г. Брянск </span>
+            <p
+              >1:100. По чертежам вырезали оконные рамы, ограждения и песочницы. На модели видны
+              корпуса и прогулочные площадки.</p
+            >
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> Торговый Комплекс "Садовод", г. Москва </span>
+            <p
+              >В версии 1:600 показана развязка с МКАД. Для версии 1:500 увеличили основание и
+              добавили управляемую подсветку территории.</p
+            >
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> МПД "Рубеж", г. Москва </span>
@@ -116,6 +133,10 @@
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> Дача Езучевских, г. Москва </span>
+            <p
+              >1:50. По фотографиям 1880 года восстановили ажурную резьбу дачи и хозяйственные
+              постройки усадьбы в Царицыно.</p
+            >
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> Спасо-Ефимиевский монастырь, г. Суздаль </span>
@@ -128,9 +149,17 @@
           </li>
           <li class="catalog-row" data-category="competition">
             <span> Конкурсный проект «Строгино», г. Москва </span>
+            <p
+              >1:1000. Пять высотных зданий расходятся от общей инженерной конструкции. Макет
+              изготовили для архитектурного конкурса.</p
+            >
           </li>
           <li class="catalog-row" data-category="airports">
             <span> Аэропорт «Внуково», г. Москва </span>
+            <p
+              >1:2000. Полосы, ангары и служебные здания пронумерованы. По модели можно изучать
+              структуру аэропорта и работу его служб.</p
+            >
           </li>
           <li class="catalog-row" data-category="buildings">
             <span> Жилой комплекс «Дубровская Слобода», г. Москва </span>
@@ -143,19 +172,13 @@
           </li>
         </ul>
       </section>
-      <section class="contacts reactive" id="contacts">
-        <div class="section-label"> Обсудим вашу задачу </div>
+      <section class="contacts" id="contacts">
         <div class="contact-layout">
           <div>
-            <h2>
-              Начнём
-              <br />
-              с замысла.
-            </h2>
+            <h2> Контакты мастерской </h2>
             <p>
-              Расскажите, что должен показать макет.
-              <br />
-              Масштаб, материалы и детали обсудим вместе.
+              Для расчёта укажите, какой объект нужен, где будете показывать макет и к какой дате он
+              должен быть готов.
             </p>
             <a class="button" href="price.html#request">
               Перейти к заявке

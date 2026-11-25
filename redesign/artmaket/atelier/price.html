@@ -11,9 +11,9 @@
     <title> Прайс-лист и заявка — АРТМАКЕТ </title>
     <meta name="theme-color" content="#103c4b" />
     <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=e9a1c059d7f2" />
-    <script src="app.js" defer></script>
-    <script src="scenes.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=49cec94c3753" />
+    <script src="app.js?v=0d69850b4f4d" defer></script>
+    <script src="scenes.js?v=fbbff37ea2a8" defer></script>
     <script src="scale-lab.js?v=ba66946fffcf" defer></script>
   </head>
   <body>
@@ -26,8 +26,9 @@
       <nav id="navigation" aria-label="Основная навигация">
         <a href="index.html#workshop"> Мастерская </a>
         <a href="index.html#types"> Типы макетов </a>
+        <a href="index.html#process"> Схема работы </a>
         <a href="portfolio.html"> Портфолио </a>
-        <a href="price.html"> Прайс-лист </a>
+        <a aria-current="page" href="price.html"> Прайс-лист </a>
       </nav>
       <a class="contact-button" href="price.html#request">
         <span>
@@ -39,23 +40,24 @@
       </a>
     </header>
     <main id="main">
-      <section class="page-intro price-intro reactive">
+      <section class="page-intro price-intro">
         <div>
-          <h1>
-            Стоимость
-            <br />
-            макета
-          </h1>
-          <p>
-            Назначение, масштаб и сложность определяют смету. Ниже — цены и сроки из прайс-листа
-            мастерской.
-          </p>
+          <h1>Стоимость макета</h1>
+          <p
+            >Архитектурный макет условной детализации — от 50 000 ₽ и от 9 дней. Для индивидуальной
+            сметы учитываем масштаб, габариты, планировку и конструкцию.</p
+          >
           <a class="button" href="#request">
             Составить заявку
             <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 19 19 5M5 5h14v14" />
             </svg>
           </a>
+          <a class="text-link" href="#price"
+            >Цены и сроки
+            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 19 19 5M5 5h14v14" /></svg
+          ></a>
         </div>
         <div class="model-scene materials-scene" data-scene="materials">
           <canvas role="img" aria-label="Материалы и слои основания архитектурного макета">
@@ -63,157 +65,142 @@
           </canvas>
         </div>
       </section>
-      <section class="prices reactive" id="price">
-        <div class="section-heading">
-          <div>
-            <p class="section-label"> Прайс-лист </p>
-            <h2>
-              Ориентиры
-              <br />
-              для вашего проекта.
-            </h2>
-          </div>
-          <p>
-            Цены и сроки из прайс-листа мастерской.
-            <br />
-            Итоговая стоимость — по индивидуальной смете.
-          </p>
+      <section class="prices" id="price">
+        <h2>Цены и сроки изготовления</h2>
+        <p class="price-explanation"
+          >Прайс даёт начальные суммы без привязки к размеру и масштабу. Для расчёта подготовьте
+          габариты объекта, имеющиеся чертежи и пожелания по детализации.</p
+        >
+        <div class="price-tables">
+          <section class="price-group">
+            <h3> Высокая детализация </h3>
+            <table>
+              <caption class="sr-only">
+                Высокая детализация: стоимость и сроки по типу макета
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col"> Тип макета </th>
+                  <th scope="col"> Срок </th>
+                  <th scope="col"> Стоимость </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"> Архитектурный </th>
+                  <td> от 18 дней </td>
+                  <td> от 90 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Промышленный </th>
+                  <td> от 16 дней </td>
+                  <td> от 90 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Градостроительный </th>
+                  <td> от 16 дней </td>
+                  <td> от 70 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Ландшафтный </th>
+                  <td> от 14 дней </td>
+                  <td> от 60 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Интерьерный </th>
+                  <td> от 14 дней </td>
+                  <td> от 50 000 ₽ </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="price-group">
+            <h3> Средняя детализация </h3>
+            <table>
+              <caption class="sr-only">
+                Средняя детализация: стоимость и сроки по типу макета
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col"> Тип макета </th>
+                  <th scope="col"> Срок </th>
+                  <th scope="col"> Стоимость </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"> Архитектурный </th>
+                  <td> от 16 дней </td>
+                  <td> от 60 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Промышленный </th>
+                  <td> от 14 дней </td>
+                  <td> от 60 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Градостроительный </th>
+                  <td> от 12 дней </td>
+                  <td> от 50 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Ландшафтный </th>
+                  <td> от 12 дней </td>
+                  <td> от 40 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Интерьерный </th>
+                  <td> от 10 дней </td>
+                  <td> от 30 000 ₽ </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="price-group">
+            <h3> Условная детализация </h3>
+            <table>
+              <caption class="sr-only">
+                Условная детализация: стоимость и сроки по типу макета
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col"> Тип макета </th>
+                  <th scope="col"> Срок </th>
+                  <th scope="col"> Стоимость </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"> Архитектурный </th>
+                  <td> от 9 дней </td>
+                  <td> от 50 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Промышленный </th>
+                  <td> от 8 дней </td>
+                  <td> от 50 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Градостроительный </th>
+                  <td> от 8 дней </td>
+                  <td> от 40 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Ландшафтный </th>
+                  <td> от 7 дней </td>
+                  <td> от 30 000 ₽ </td>
+                </tr>
+                <tr>
+                  <th scope="row"> Интерьерный </th>
+                  <td> от 7 дней </td>
+                  <td> от 20 000 ₽ </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
         </div>
-        <p class="price-explanation">
-          Размер и масштаб для этих начальных цен в прайсе не указаны. Для точного расчёта
-          мастерской понадобятся габариты, чертежи и требования к детализации.
-        </p>
-        <section class="price-group">
-          <h3> Высокая детализация </h3>
-          <table>
-            <caption class="sr-only">
-              Высокая детализация: стоимость и сроки по типу макета
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col"> Тип макета </th>
-                <th scope="col"> Срок </th>
-                <th scope="col"> Стоимость </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row"> Архитектурный </th>
-                <td> от 18 дней </td>
-                <td> от 90 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Промышленный </th>
-                <td> от 16 дней </td>
-                <td> от 90 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Градостроительный </th>
-                <td> от 16 дней </td>
-                <td> от 70 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Ландшафтный </th>
-                <td> от 14 дней </td>
-                <td> от 60 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Интерьерный </th>
-                <td> от 14 дней </td>
-                <td> от 50 000 ₽ </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-        <section class="price-group">
-          <h3> Средняя детализация </h3>
-          <table>
-            <caption class="sr-only">
-              Средняя детализация: стоимость и сроки по типу макета
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col"> Тип макета </th>
-                <th scope="col"> Срок </th>
-                <th scope="col"> Стоимость </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row"> Архитектурный </th>
-                <td> от 16 дней </td>
-                <td> от 60 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Промышленный </th>
-                <td> от 14 дней </td>
-                <td> от 60 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Градостроительный </th>
-                <td> от 12 дней </td>
-                <td> от 50 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Ландшафтный </th>
-                <td> от 12 дней </td>
-                <td> от 40 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Интерьерный </th>
-                <td> от 10 дней </td>
-                <td> от 30 000 ₽ </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-        <section class="price-group">
-          <h3> Условная детализация </h3>
-          <table>
-            <caption class="sr-only">
-              Условная детализация: стоимость и сроки по типу макета
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col"> Тип макета </th>
-                <th scope="col"> Срок </th>
-                <th scope="col"> Стоимость </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row"> Архитектурный </th>
-                <td> от 9 дней </td>
-                <td> от 50 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Промышленный </th>
-                <td> от 8 дней </td>
-                <td> от 50 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Градостроительный </th>
-                <td> от 8 дней </td>
-                <td> от 40 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Ландшафтный </th>
-                <td> от 7 дней </td>
-                <td> от 30 000 ₽ </td>
-              </tr>
-              <tr>
-                <th scope="row"> Интерьерный </th>
-                <td> от 7 дней </td>
-                <td> от 20 000 ₽ </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-        <details class="extras">
-          <summary>
-            Дополнительные элементы
-            <span class="detail-mark" aria-hidden="true"> </span>
-          </summary>
+        <section class="extras">
+          <h3>Дополнительные элементы</h3>
           <dl>
             <div>
               <dt> Подсветка внутри объекта </dt>
@@ -248,7 +235,7 @@
               <dd> от 7 000 ₽ </dd>
             </div>
           </dl>
-        </details>
+        </section>
         <a class="text-link source-link" href="https://artmaket.moscow/price-list/">
           Прайс на действующем сайте
           <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
@@ -256,7 +243,7 @@
           </svg>
         </a>
       </section>
-      <section class="request reactive" id="request">
+      <section class="request" id="request">
         <div>
           <h2> Обсудим ваш макет </h2>
           <p>
@@ -372,19 +359,13 @@
           </div>
         </div>
       </section>
-      <section class="contacts reactive" id="contacts">
-        <div class="section-label"> Обсудим вашу задачу </div>
+      <section class="contacts" id="contacts">
         <div class="contact-layout">
           <div>
-            <h2>
-              Начнём
-              <br />
-              с замысла.
-            </h2>
+            <h2> Контакты мастерской </h2>
             <p>
-              Расскажите, что должен показать макет.
-              <br />
-              Масштаб, материалы и детали обсудим вместе.
+              Для расчёта укажите, какой объект нужен, где будете показывать макет и к какой дате он
+              должен быть готов.
             </p>
             <a class="button" href="price.html#request">
               Перейти к заявке

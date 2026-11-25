@@ -97,6 +97,9 @@
       ctx = canvas.getContext('2d');
     if (!ctx) return;
     const kind = scene.dataset.scene;
+    const section = scene.closest('section');
+    const isIntro = section.matches('main > section:first-child');
+    const isHeroPavilion = isIntro && kind === 'pavilion' && section.matches('.hero');
     let pointerX = 0,
       pointerY = 0,
       pending = false,
@@ -122,11 +125,10 @@
         canvas.height = Math.round(h * dpr);
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const parent = scene.closest('section').getBoundingClientRect();
-      let progress =
-        kind === 'pavilion'
-          ? clamp(-parent.top / (innerHeight * 0.55), 0, 1)
-          : clamp((innerHeight - parent.top) / (innerHeight * 0.9), 0, 1);
+      const parent = section.getBoundingClientRect();
+      let progress = isIntro
+        ? clamp(window.scrollY / parent.height, 0, 1)
+        : clamp((innerHeight - parent.top) / (innerHeight * 0.9), 0, 1);
       if (motion.matches) progress = kind === 'materials' ? 1 : 0;
       const frameKey = [
         w,
@@ -292,32 +294,34 @@
       ctx.putImageData(raster, 0, 0);
       canvas.dataset.progress = progress.toFixed(3);
     }
-    scene.addEventListener(
-      'pointermove',
-      (event) => {
-        if (motion.matches) return;
-        if (event.pointerType === 'touch' && event.buttons !== 1) return;
-        const rect = scene.getBoundingClientRect();
-        pointerX = clamp(((event.clientX - rect.left) / rect.width) * 2 - 1, -1, 1);
-        pointerY = clamp(((event.clientY - rect.top) / rect.height) * 2 - 1, -1, 1);
-        schedule();
-      },
-      { passive: true },
-    );
-    scene.addEventListener('pointerleave', () => {
-      pointerX = pointerY = 0;
-      schedule();
-    });
-    scene.addEventListener('pointercancel', () => {
-      pointerX = pointerY = 0;
-      schedule();
-    });
-    scene.addEventListener('pointerup', (event) => {
-      if (event.pointerType === 'touch') {
+    if (isHeroPavilion) {
+      scene.addEventListener(
+        'pointermove',
+        (event) => {
+          if (motion.matches) return;
+          if (event.pointerType === 'touch' && event.buttons !== 1) return;
+          const rect = scene.getBoundingClientRect();
+          pointerX = clamp(((event.clientX - rect.left) / rect.width) * 2 - 1, -1, 1);
+          pointerY = clamp(((event.clientY - rect.top) / rect.height) * 2 - 1, -1, 1);
+          schedule();
+        },
+        { passive: true },
+      );
+      scene.addEventListener('pointerleave', () => {
         pointerX = pointerY = 0;
         schedule();
-      }
-    });
+      });
+      scene.addEventListener('pointercancel', () => {
+        pointerX = pointerY = 0;
+        schedule();
+      });
+      scene.addEventListener('pointerup', (event) => {
+        if (event.pointerType === 'touch') {
+          pointerX = pointerY = 0;
+          schedule();
+        }
+      });
+    }
     new ResizeObserver(schedule).observe(scene);
     new IntersectionObserver(
       (entries) => {

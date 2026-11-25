@@ -26,18 +26,6 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('click', (event) => {
   if (!event.target.closest('.header')) closeMenu();
 });
-document.querySelectorAll('.reactive').forEach((section) => {
-  let frame;
-  section.addEventListener('pointermove', (event) => {
-    if (reducedMotion.matches || event.pointerType !== 'mouse') return;
-    cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(() => {
-      const box = section.getBoundingClientRect();
-      section.style.setProperty('--px', `${event.clientX - box.left}px`);
-      section.style.setProperty('--py', `${event.clientY - box.top}px`);
-    });
-  });
-});
 const contactButton = document.querySelector('.contact-button');
 contactButton.addEventListener('pointermove', (event) => {
   if (reducedMotion.matches || event.pointerType !== 'mouse') return;

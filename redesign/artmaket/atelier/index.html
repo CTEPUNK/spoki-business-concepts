@@ -11,11 +11,11 @@
     <title> Архитектурные макеты в Москве — АРТМАКЕТ </title>
     <meta name="theme-color" content="#103c4b" />
     <link rel="icon" href="media/logo.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=e9a1c059d7f2" />
-    <script src="app.js" defer></script>
-    <script src="scenes.js" defer></script>
-    <script src="vendor/three-atelier.min.js" defer></script>
-    <script src="pavilion-webgl.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=49cec94c3753" />
+    <script src="app.js?v=0d69850b4f4d" defer></script>
+    <script src="scenes.js?v=fbbff37ea2a8" defer></script>
+    <script src="vendor/three-atelier.min.js?v=3257c73f5723" defer></script>
+    <script src="pavilion-webgl.js?v=097939724df5" defer></script>
     <script src="scale-lab.js?v=ba66946fffcf" defer></script>
   </head>
   <body>
@@ -28,6 +28,7 @@
       <nav id="navigation" aria-label="Основная навигация">
         <a href="index.html#workshop"> Мастерская </a>
         <a href="index.html#types"> Типы макетов </a>
+        <a href="index.html#process"> Схема работы </a>
         <a href="portfolio.html"> Портфолио </a>
         <a href="price.html"> Прайс-лист </a>
       </nav>
@@ -41,26 +42,30 @@
       </a>
     </header>
     <main id="main">
-      <section class="hero reactive">
+      <section class="hero">
         <div class="hero-copy">
           <h1>
             Архитектурные
             <br />
             макеты
           </h1>
-          <p> Московская мастерская макетов зданий и территорий для выставок и презентаций. </p>
-          <a class="button" href="price.html#request">
-            Обсудить макет
-            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 19 19 5M5 5h14v14" />
-            </svg>
-          </a>
-          <a class="text-link" href="#scale-lab">
-            Подобрать масштаб
-            <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 19 19 5M5 5h14v14" />
-            </svg>
-          </a>
+          <p>
+            В АРТМАКЕТЕ изготавливаем здания и целые кварталы в масштабе для выставок, презентаций
+            инвесторам и обучения.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="price.html#request">
+              Обсудить макет
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" />
+              </svg>
+            </a>
+            <a class="text-link" href="#scale-lab"
+              >Подобрать масштаб
+              <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 19 19 5M5 5h14v14" /></svg
+            ></a>
+          </div>
         </div>
         <div class="model-scene pavilion-scene" data-scene="pavilion">
           <canvas
@@ -72,7 +77,7 @@
           </canvas>
         </div>
       </section>
-      <section class="workshop reactive" id="workshop">
+      <section class="workshop" id="workshop">
         <div>
           <h2>
             Мастерская
@@ -81,18 +86,17 @@
           </h2>
         </div>
         <div>
-          <p class="lead">
-            Изготавливаем макеты зданий, территорий и оборудования на собственном производстве в
-            Москве.
-          </p>
-          <p>
-            Цельные и разборные модели, подсветка, движущиеся элементы и электронное оснащение. От
-            технического задания до доставки и сборки на месте.
-          </p>
-          <p> Также занимаемся 3D-визуализацией. Способ подачи выбираем под задачу проекта. </p>
+          <p
+            >На нашем производстве в Москве собираем цельные и разборные макеты. Для выставки можно
+            предусмотреть съёмные части и транспортировочный кофр.</p
+          >
+          <p
+            >Для презентации на экране предлагаем 3D-визуализацию, для показа в дополненной или
+            виртуальной реальности — 3D-анимацию макета.</p
+          >
         </div>
       </section>
-      <section class="types reactive" id="types">
+      <section class="types" id="types">
         <div>
           <h2>
             Что должен
@@ -109,13 +113,17 @@
               <path d="M5 19 19 5M5 5h14v14" />
             </svg>
           </a>
-          <p class="small">
-            Также: художественные, рекламные и выставочные макеты, бизнес-сувениры, модели
-            автомагистралей и железных дорог.
-          </p>
+          <p
+            >Для выставочных и рекламных макетов меняем привычный масштаб предмета. Например,
+            выставочный флакон Librederm мастерская увеличила в 15 раз.</p
+          >
+          <p
+            >Другие направления — художественные миниатюры, бизнес-сувениры, модели автомагистралей
+            и железных дорог.</p
+          >
         </div>
         <div class="type-list">
-          <details>
+          <details open>
             <summary>
               Архитектурные
               <span class="detail-mark" aria-hidden="true"> </span>
@@ -159,20 +167,14 @@
           </details>
         </div>
       </section>
-      <section class="material-chapter reactive" id="materials">
+      <section class="material-chapter" id="materials">
         <div class="chapter-copy">
-          <h2>
-            Материал задаёт
-            <br />
-            характер модели
-          </h2>
-          <p>
-            Глухие объёмы, прозрачное остекление и основание работают вместе. На образце — как
-            отдельные пластины складываются в цельный предмет.
-          </p>
-          <p class="small">
-            Материалы и отделку конкретного макета согласуем в техническом задании.
-          </p>
+          <h2>Материалы и чертежи</h2>
+          <p
+            >Диспетчерский пункт аэропорта Толмачево вырезали из оргстекла лазером. Для детского
+            сада «Росинка» использовали ПВХ, дерево и виниловые плёнки.</p
+          >
+          <p>Для каждого объекта согласуем материалы и детализацию в техническом задании.</p>
         </div>
         <div class="model-scene materials-scene" data-scene="materials">
           <canvas
@@ -183,7 +185,7 @@
           </canvas>
         </div>
       </section>
-      <section class="facade-chapter reactive" id="facade">
+      <section class="facade-chapter" id="facade">
         <div class="model-scene facade-scene" data-scene="facade">
           <canvas
             role="img"
@@ -193,20 +195,19 @@
           </canvas>
         </div>
         <div class="chapter-copy">
-          <h2>
-            Детали объясняют
-            <br />
-            архитектуру
-          </h2>
-          <p>
-            Ритм опор, глубина навеса, шаг остекления. При раскрытии фасада видна связь оболочки и
-            внутренней конструкции.
-          </p>
-          <p> Для концепции важен силуэт. Для выставки — материалы, фасады и окружение. </p>
+          <h2>Подсветка и механика</h2>
+          <p
+            >Внутренняя подсветка выделяет помещения за остеклением, наружная — здания и территорию.
+            В макете ТК «Садовод» светятся мачты по периметру и фонтан между корпусами.</p
+          >
+          <p
+            >В учебной модели работу оборудования можно показать движущимися деталями и дополнить
+            голосовым сопровождением.</p
+          >
         </div>
       </section>
       <span id="drawing" class="anchor-alias"> </span>
-      <section id="scale-lab" class="scale-lab reactive">
+      <section id="scale-lab" class="scale-lab">
         <div class="section-heading">
           <div>
             <h2> Подберите масштаб </h2>
@@ -297,7 +298,7 @@
           знаменатель масштаба.
         </noscript>
       </section>
-      <section class="selected reactive">
+      <section class="selected">
         <div class="section-heading">
           <div>
             <h2> Готовая работа </h2>
@@ -333,13 +334,9 @@
           </figure>
         </div>
       </section>
-      <section class="process reactive" id="process">
+      <section class="process" id="process">
         <div class="section-heading">
-          <h2>
-            От задания
-            <br />
-            до выставочного стола
-          </h2>
+          <h2>Как заказать макет</h2>
           <a class="button" href="price.html#request">
             Составить заявку
             <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
@@ -349,42 +346,41 @@
         </div>
         <ol class="process-steps">
           <li>
-            <h3> Задача и чертежи </h3>
-            <p>
-              Обсуждаем масштаб, назначение и детализацию. Готовим техническое задание и
-              индивидуальную смету.
-            </p>
+            <h3>Заявка и предложение</h3>
+            <p
+              >Сообщите менеджеру назначение и размеры объекта. В коммерческом предложении
+              мастерская укажет материалы, стоимость, сроки сдачи и условия приёмки.</p
+            >
           </li>
           <li>
-            <h3> Изготовление </h3>
-            <p>
-              После согласования и предоплаты подбираем материалы и начинаем работу. Проект ведёт
-              персональный менеджер.
-            </p>
+            <h3>Чертежи и производство</h3>
+            <p
+              >По чертежам уточняем масштаб, конструкцию и оснащение. После согласования
+              технического задания и получения предоплаты приступаем к изготовлению.</p
+            >
           </li>
           <li>
-            <h3> Доставка и сборка </h3>
-            <p>
-              Готовим транспортировочную упаковку. При необходимости собираем на месте и подключаем
-              электронику.
-            </p>
+            <h3>Доставка и сборка</h3>
+            <p
+              >Упаковываем макет в ящик с мягким наполнителем. По Москве доставка бесплатна.
+              Разборный макет собираем на месте, подключаем электронику и показываем, как ею
+              пользоваться.</p
+            >
           </li>
         </ol>
-        <p> Обслуживание и реставрация. Гарантия — 1 год, под защитным колпаком — 2 года. </p>
+        <p
+          ><strong>Гарантия на все типы макетов — 1 год.</strong> Если макет находится под защитным
+          колпаком, гарантия действует 2 года. В этот срок реставрация и ремонт при поломке
+          бесплатны.</p
+        >
       </section>
-      <section class="contacts reactive" id="contacts">
-        <div class="section-label"> Обсудим вашу задачу </div>
+      <section class="contacts" id="contacts">
         <div class="contact-layout">
           <div>
-            <h2>
-              Начнём
-              <br />
-              с замысла.
-            </h2>
+            <h2> Контакты мастерской </h2>
             <p>
-              Расскажите, что должен показать макет.
-              <br />
-              Масштаб, материалы и детали обсудим вместе.
+              Для расчёта укажите, какой объект нужен, где будете показывать макет и к какой дате он
+              должен быть готов.
             </p>
             <a class="button" href="price.html#request">
               Перейти к заявке

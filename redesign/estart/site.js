@@ -45,6 +45,62 @@
   new ResizeObserver(queue).observe(document.body);
   update();
 
+  // Measure the stationary section, card and text or photo link under the pointer.
+  const surfaceSelector='main > section, .foot';
+  const detailSelector='.product, .work, .ice-figure, .sheet-preview, .steps > div, .contact-grid article, .dir summary, .search-field, .pick:enabled, .plain-input, #comment, #order-route';
+  const subjectSelector='.image-link, h1, h2, h3, .intro, .lead, .home-atelier-grid > div > p:not(.kicker), .brief-invite > div > p, .steps p';
+  let pointer=null, pointerFrame=0, pointed=[];
+
+  function clearPoint(node) {
+    node.removeAttribute('data-pointed');
+    node.style.removeProperty('--pointer-x');
+    node.style.removeProperty('--pointer-y');
+  }
+  function clearPointer() {
+    cancelAnimationFrame(pointerFrame);
+    pointerFrame=0;
+    pointer=null;
+    pointed.forEach(clearPoint);
+    pointed=[];
+  }
+  function offset(position,start,length) {
+    return Math.max(-1,Math.min(1,(position-start)/length*2-1)).toFixed(3);
+  }
+  function paintPointer() {
+    pointerFrame=0;
+    const element=document.elementFromPoint(pointer.x,pointer.y);
+    const nodes=element ? [surfaceSelector,detailSelector,subjectSelector]
+      .map(selector=>element.closest(selector)).filter(Boolean) : [];
+    const measures=nodes.map(node=>node.getBoundingClientRect());
+    for(const old of pointed) if(!nodes.includes(old)) clearPoint(old);
+    nodes.forEach((node,i)=>{
+      const box=measures[i];
+      node.style.setProperty('--pointer-x',offset(pointer.x,box.left,box.width));
+      node.style.setProperty('--pointer-y',offset(pointer.y,box.top,box.height));
+      if(!node.hasAttribute('data-pointed')) node.setAttribute('data-pointed','');
+    });
+    pointed=nodes;
+  }
+  function queuePointer() {
+    if(pointer&&!pointerFrame) pointerFrame=requestAnimationFrame(paintPointer);
+  }
+  document.addEventListener('pointermove',event=>{
+    if(!fine.matches||reduced.matches||event.pointerType==='touch'||event.buttons) return;
+    pointer={x:event.clientX,y:event.clientY};
+    queuePointer();
+  },{passive:true});
+  document.addEventListener('pointerout',event=>{if(!event.relatedTarget) clearPointer();});
+  document.addEventListener('pointercancel',clearPointer);
+  document.addEventListener('pointerdown',clearPointer,{passive:true});
+  document.addEventListener('keydown',event=>{if(event.key==='Tab') clearPointer();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden) clearPointer();});
+  addEventListener('blur',clearPointer);
+  addEventListener('pagehide',clearPointer);
+  addEventListener('resize',queuePointer);
+  addEventListener('scroll',queuePointer,{passive:true});
+  reduced.addEventListener('change',clearPointer);
+  fine.addEventListener('change',()=>{rest();clearPointer();});
+
   document.addEventListener('focusin',e=>{
     const target=e.target;
     if(mast.contains(target)||target.closest('dialog')||target.classList.contains('skip'))return;

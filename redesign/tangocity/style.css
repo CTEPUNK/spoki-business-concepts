@@ -79,7 +79,8 @@ svg { display: block; }
 .hero-button { background: #f9e4cc; color: #45252a; }
 .hero-button:is(:hover,:focus-visible) { background: #fff0dd; }
 .hero-copy .hero-button { margin-top: 1.4rem; }
-.hero-art { position: absolute; inset: -1% -2% 0 auto; width: 57%; z-index: 0; display: grid; place-items: center; }
+.hero-art { position: absolute; inset: 7% 1% 7% auto; width: 46%; z-index: 0; display: grid; place-items: center; }
+.hero-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 .schedule { padding-block: clamp(2.4rem, 4.1vw, 4.35rem) clamp(2.8rem, 5.4vw, 5.4rem); }
 .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
@@ -174,7 +175,7 @@ textarea { display: block; width: 100%; margin: .45rem 0 .7rem; padding: .6rem; 
 #copy-status { font-size: .92rem; color: var(--wine); }
 @media (max-width: 59rem) {
   .class-list { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .hero-art { width: 56%; right: -3%; }
+  .hero-art { width: 44%; right: 0; }
   .contact-cols { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .contact-cols .contact-place { grid-column: 1/-1; padding-bottom: 1.1rem; border-bottom: 1px solid var(--rule); }
   .contact-cols .contact-person:nth-child(2) { border-left: 0; padding-left: 0; }
@@ -185,13 +186,16 @@ textarea { display: block; width: 100%; margin: .45rem 0 .7rem; padding: .6rem; 
   .brand svg { width: 1.85rem; height: 1.85rem; }
   .brand span { font-size: 1.8rem; }
   .header-contact { min-height: 2.75rem; padding: .45rem .8rem; }
-  .hero-inner { min-height: 0; }
-  .hero-copy { width: 100%; padding: 1.45rem 0 1.6rem; }
+  .hero-inner { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,1fr); column-gap: .5rem; min-height: 0; padding-block: 1.45rem 1.6rem; }
+  .hero-copy { display: contents; }
+  .hero-kicker { grid-column: 1/-1; grid-row: 1; }
+  .hero h1 { grid-column: 1/-1; grid-row: 2; }
   .hero h1 { font-size: clamp(2.63rem,8.75vw,3.9rem); margin: .7rem 0 .8rem; }
   .hero h1 em { font-size: 1.29em; }
-  .hero-description { width: 56%; max-width: 18rem; font-size: 1rem; line-height: 1.46; }
-  .hero-copy .hero-button { margin-top: 1rem; }
-  .hero-art { inset: 13% -12% 0 auto; width: 72%; }
+  .hero-description { grid-column: 1; grid-row: 3; width: 100%; max-width: 18rem; font-size: 1rem; line-height: 1.46; }
+  .hero-copy .hero-button { grid-column: 1/-1; grid-row: 4; justify-self: start; margin-top: 1rem; }
+  .hero-art { position: static; grid-column: 2; grid-row: 3; justify-self: end; width: min(100%,16rem); margin-top: -1.25rem; }
+  .hero-art img { height: auto; }
   .section-heading { align-items: flex-start; flex-direction: column; gap: .6rem; }
   .schedule { padding-block: 2.15rem 2.6rem; }
   .schedule-controls { margin-top: 1.05rem; }
@@ -218,8 +222,6 @@ textarea { display: block; width: 100%; margin: .45rem 0 .7rem; padding: .6rem; 
   .footer-inner > span:last-child { flex-basis: 100%; }
 }
 @media (max-width: 25rem) {
-  .hero-art { right: -25%; width: 87%; top: 18%; }
-  .hero-description { width: 61%; }
   .level-filters button { padding-inline: .79rem; }
   .schedule-bottom { align-items: flex-start; }
 }

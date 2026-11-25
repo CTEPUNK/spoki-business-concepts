@@ -60,9 +60,9 @@ async function visit(dir) {
       .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=3#")
       .replace(/assets\/mark\.svg(?:\?v=[\d.]+)?"/g,'assets/mark.svg?v=3"')
       .replace(/(site\.js|app\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
-      .replace(/rhythm\.js(?:\?v=[\d.]+)?"/g,'rhythm.js?v=3.1"')
-      .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*<link rel="stylesheet" href="[^"]*dance\.css">)?/g,
-        '$1<link rel="stylesheet" href="$2dance.css">');
+      .replace(/(dance|rhythm)\.js(?:\?v=[\d.]+)?"/g,'$1.js?v=4"')
+      .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*(<link rel="stylesheet" href="[^"]*dance\.css(?:\?v=[\d.]+)?">))?/g,
+        (_,sections,prefix,dance) => sections + (dance || '<link rel="stylesheet" href="'+prefix+'dance.css">'));
     if (old !== html) await writeFile(path,html);
   }
 }
@@ -86,9 +86,5 @@ async function timetablePage() {
   await mkdir(dir,{recursive:true});
   await writeFile(join(dir,"index.html"), page);
 }
-const homePath=join(root,"index.html");
-const home=await readFile(homePath,"utf8");
-const drawing=(await readFile(join(root,"assets","abrazo.svg"),"utf8")).trim();
-await writeFile(homePath,home.replace(/<!-- dancers -->[\s\S]*?<!-- end dancers -->/g,"<!-- dancers -->"+drawing+"<!-- end dancers -->"));
 await timetablePage();
 await visit(root);

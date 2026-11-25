@@ -11,14 +11,14 @@
   <title>TangoCity — расписание и запись на танго в Москве</title>
   <link rel="icon" type="image/svg+xml" href="./assets/mark.svg?v=3">
   <link rel="stylesheet" href="./assets/fonts/fonts.css">
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./sections.css"><link rel="stylesheet" href="./dance.css">
+  <link rel="stylesheet" href="./style.css?v=4">
+  <link rel="stylesheet" href="./sections.css?v=4"><link rel="stylesheet" href="./dance.css?v=4">
   <script src="./site.js?v=3" defer></script>
   <script src="./schedule.js?v=2" defer></script>
   <script src="./school-calendar.js?v=3" defer></script>
   <script src="./app.js?v=3" defer></script>
-  <script src="./dance.js" defer></script>
-  <script src="./rhythm.js?v=3.1" defer></script>
+  <script src="./dance.js?v=4" defer></script>
+  <script src="./rhythm.js?v=4" defer></script>
 </head>
 <body id="top">
   <a class="skip" href="#schedule">К расписанию</a>
@@ -34,21 +34,7 @@
           <p class="hero-description" id="hero-next">Группы для первого урока и для тех, кто уже танцует.</p>
           <a class="button hero-button" href="#schedule">Выбрать занятие <svg class="arrow" aria-hidden="true"><use href="./assets/ui.svg?v=3#i-arrow"/></svg></a>
         </div>
-        <div class="hero-art"><!-- dancers --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" class="dance-drawing" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <g stroke="#F4D9BD">
-    <path data-line="lead-back" stroke-width="3.6" d="M41 373 C91 350 136 304 162 257 C180 225 185 203 172 176 C157 148 151 129 163 110 C176 88 203 88 222 78 C230 74 231 69 227 61 C220 43 225 29 239 23 C253 17 269 23 277 37 C282 46 277 52 283 61 C286 65 285 68 279 70 C275 76 273 84 265 82 C262 81 259 78 256 77"/>
-    <path data-line="lead-leg" stroke-width="2.8" d="M167 255 C188 237 205 226 220 220 C237 250 230 279 218 306 C207 331 197 351 188 371 C185 376 178 379 166 380"/>
-    <path data-line="lead-arm" stroke-width="2.8" d="M175 135 C197 130 214 159 242 166 C268 172 294 148 315 137 C324 132 334 128 341 131"/>
-  </g>
-  <g stroke="#F19B8D">
-    <path data-line="follow-back" stroke-width="3.7" d="M323 103 C324 123 347 141 349 157 C351 177 330 190 327 206 C323 222 333 230 350 233 C365 236 378 243 382 255"/>
-    <path data-line="follow-raised" stroke-width="3.7" d="M382 255 C385 267 402 272 417 279 C436 288 437 299 421 310 C399 328 377 347 359 368 C355 374 352 379 352 382"/>
-    <path data-line="follow-leg" stroke-width="2.9" d="M400 296 C371 292 334 275 305 265 C280 292 253 323 220 347 C203 359 188 367 170 372"/>
-    <path data-line="follow-front" stroke-width="2.65" d="M286 132 C282 143 268 151 270 159 C272 167 282 170 291 165 C285 180 279 193 281 207 C282 221 291 230 288 243"/>
-    <path data-line="follow-arm" stroke-width="2.8" d="M285 68 C284 75 277 77 278 81 C279 84 282 84 284 86 C286 96 296 101 305 95 C299 113 285 126 267 126 C239 126 216 98 194 98 C190 98 186 99 182 101"/>
-    <path data-line="follow-hair" stroke-width="3.1" d="M283 68 C289 51 305 44 320 49 C342 55 349 74 342 96 C336 118 343 133 358 150 C373 168 373 183 363 198 C366 177 352 165 343 156"/>
-  </g>
-</svg><!-- end dancers --></div><div class="phase-controls" role="group" aria-label="Фигуры танго" hidden><button type="button" data-phase-step="-1" aria-label="Предыдущая фигура"><svg class="icon" aria-hidden="true"><use href="./assets/ui.svg?v=3#i-down"/></svg></button><output>Объятие</output><button type="button" data-phase-step="1" aria-label="Следующая фигура"><svg class="icon" aria-hidden="true"><use href="./assets/ui.svg?v=3#i-down"/></svg></button></div>
+        <div class="hero-art"><img src="./assets/abrazo.svg?v=4" width="528" height="345" alt="" fetchpriority="high"></div>
       </div>
     </section>
 
@@ -105,7 +91,7 @@
 
     <section class="rhythm dark scene" id="rhythm" aria-labelledby="rhythm-title"><div class="wrap rhythm-inner">
   <div class="rhythm-copy"><p class="kicker"><span class="kicker-rule"></span>Практика ритма</p><h2 id="rhythm-title">В такт <em>танго</em></h2>
-  <p>Сначала послушайте четыре удара метронома. Затем нажимайте в такт восемь раз. Шесть точных попаданий — и пара станцует для вас.</p>
+  <p>Послушайте четыре удара метронома, затем вступайте. Отбейте в такт хотя бы шесть долей из восьми.</p>
   <div class="beat-controls" id="beat-controls" hidden><button type="button" class="button hero-button" id="beat-tap">Запустить метроном</button><button type="button" class="beat-option" id="beat-sound" aria-pressed="true">Звук</button><button type="button" class="beat-reset" id="beat-reset" hidden>Остановить</button></div>
   <p id="beat-status" class="beat-status" role="status">80 ударов в минуту</p>
   <div class="beat-score" aria-label="Восемь долей"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></div></div>
@@ -118,21 +104,7 @@
   <g stroke="#815b4c" stroke-width="1.4"><path d="M187 58h7m12 0h7"/><path d="M186.1 67h4m18 0h4"/><path d="M185.2 76h7m12 0h7"/><path d="M184.3 85h4m18 0h4"/><path d="M183.4 94h7m12 0h7"/><path d="M182.5 103h4m18 0h4"/><path d="M181.6 112h7m12 0h7"/><path d="M180.7 121h4m18 0h4"/><path d="M179.8 130h7m12 0h7"/><path d="M178.9 139h4m18 0h4"/><path d="M178 148h7m12 0h7"/></g>
   <path d="M139 233H261M138 240H262" stroke="#b17860"/>
   <g class="metro-arm"><path d="M200 225V34" stroke="#efd6b3" stroke-width="3.4"/><path d="M193 90L205 87L208 110L195 113Z" fill="#d29b6f" stroke="#ffe2ba"/><circle cx="200" cy="225" r="5" fill="#edc397" stroke="#52342f"/></g>
-</svg></div><div class="winning-dance" hidden><!-- dancers --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" class="dance-drawing" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <g stroke="#F4D9BD">
-    <path data-line="lead-back" stroke-width="3.6" d="M41 373 C91 350 136 304 162 257 C180 225 185 203 172 176 C157 148 151 129 163 110 C176 88 203 88 222 78 C230 74 231 69 227 61 C220 43 225 29 239 23 C253 17 269 23 277 37 C282 46 277 52 283 61 C286 65 285 68 279 70 C275 76 273 84 265 82 C262 81 259 78 256 77"/>
-    <path data-line="lead-leg" stroke-width="2.8" d="M167 255 C188 237 205 226 220 220 C237 250 230 279 218 306 C207 331 197 351 188 371 C185 376 178 379 166 380"/>
-    <path data-line="lead-arm" stroke-width="2.8" d="M175 135 C197 130 214 159 242 166 C268 172 294 148 315 137 C324 132 334 128 341 131"/>
-  </g>
-  <g stroke="#F19B8D">
-    <path data-line="follow-back" stroke-width="3.7" d="M323 103 C324 123 347 141 349 157 C351 177 330 190 327 206 C323 222 333 230 350 233 C365 236 378 243 382 255"/>
-    <path data-line="follow-raised" stroke-width="3.7" d="M382 255 C385 267 402 272 417 279 C436 288 437 299 421 310 C399 328 377 347 359 368 C355 374 352 379 352 382"/>
-    <path data-line="follow-leg" stroke-width="2.9" d="M400 296 C371 292 334 275 305 265 C280 292 253 323 220 347 C203 359 188 367 170 372"/>
-    <path data-line="follow-front" stroke-width="2.65" d="M286 132 C282 143 268 151 270 159 C272 167 282 170 291 165 C285 180 279 193 281 207 C282 221 291 230 288 243"/>
-    <path data-line="follow-arm" stroke-width="2.8" d="M285 68 C284 75 277 77 278 81 C279 84 282 84 284 86 C286 96 296 101 305 95 C299 113 285 126 267 126 C239 126 216 98 194 98 C190 98 186 99 182 101"/>
-    <path data-line="follow-hair" stroke-width="3.1" d="M283 68 C289 51 305 44 320 49 C342 55 349 74 342 96 C336 118 343 133 358 150 C373 168 373 183 363 198 C366 177 352 165 343 156"/>
-  </g>
-</svg><!-- end dancers --></div><p class="metro-readout" aria-hidden="true"><span class="tick-lamp"></span><span id="metro-readout">80 <small>уд/мин</small></span></p></div>
+</svg></div><div class="winning-dance" hidden><img src="./assets/abrazo.svg?v=4" width="528" height="345" alt="" decoding="async"></div><p class="metro-readout" aria-hidden="true"><span class="tick-lamp"></span><span id="metro-readout">80 <small>уд/мин</small></span></p></div>
 </div></section>
 
     <section id="contacts" class="contacts wrap scene" aria-labelledby="contact-title">

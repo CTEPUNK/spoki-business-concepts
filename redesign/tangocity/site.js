@@ -58,7 +58,7 @@ document.addEventListener("pointerout", event => {
 // visual fields. Text, links, form controls and the map retain native cursors.
 (() => {
   const selector=".hero, .rhythm, .first-lesson, .folio-hero";
-  const native="a, button, summary, label, input, textarea, iframe, video, p, h1, h2, h3, figcaption, output, .faq, .phase-controls";
+  const native="a, button, summary, label, input, textarea, iframe, video, p, h1, h2, h3, figcaption, output, .faq";
   const base=document.documentElement.dataset.base || "./";
   const href=base+"assets/ui.svg?v=3#heel";
   const cursor=document.createElement("div");

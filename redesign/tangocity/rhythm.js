@@ -5,10 +5,10 @@
   const stage=document.querySelector(".rhythm"), tap=byId("beat-tap"), stop=byId("beat-reset");
   const sound=byId("beat-sound"), status=byId("beat-status"), readout=byId("metro-readout");
   const meter=stage.querySelector(".meter-frame"), needle=stage.querySelector(".metro-arm");
-  const dance=stage.querySelector(".winning-dance"), pose=danceArtist(dance.querySelector("svg"));
+  const dance=stage.querySelector(".winning-dance");
   const lamps=[...stage.querySelectorAll(".beat-score span")];
   const interval=750, tolerance=170, countIn=4, total=lamps.length;
-  let mode="idle", start=0, frame=0, previousBeat=-1, finishAt=0, lastTap=-Infinity, audioVersion=0;
+  let mode="idle", start=0, frame=0, previousBeat=-1, lastTap=-Infinity, audioVersion=0;
   let mistakes=0, soundOn=true, audio=null;
   const hits=new Set(), activeClicks=new Set();
   function reset() {
@@ -49,15 +49,15 @@
     activeClicks.add(osc);
     osc.onended=()=>{activeClicks.delete(osc);osc.disconnect();gain.disconnect();};
   }
-  function finish(now) {
+  function finish() {
     const won=hits.size>=6 && mistakes<=3;
-    mode=won?"dance":"done";finishAt=now;stage.removeAttribute("data-ticking");
+    mode="done";stage.removeAttribute("data-ticking");
     tap.textContent="Сыграть ещё раз";stop.hidden=true;
     const feedback=mistakes>3 ? "Были лишние нажатия. Нажимайте один раз на долю." : "Попробуйте ещё раз и нажимайте вместе с ударами.";
-    status.textContent=won ? hits.size+" из 8 в такт. Пара танцует!" : hits.size+" из 8 в такт. "+feedback;
-    readout.textContent=won?"Танец":"80 уд/мин";
+    status.textContent=won ? hits.size+" из 8 в такт. Отличный ритм!" : hits.size+" из 8 в такт. "+feedback;
+    readout.textContent=won?"В такт":"80 уд/мин";
     if (won) {
-      meter.hidden=true;dance.hidden=false;pose(reduceMotion.matches?3:0);
+      meter.hidden=true;dance.hidden=false;
     }
   }
   function draw(now) {
@@ -76,14 +76,9 @@
       for(let n=0;n<total;n++) {
         if (!hits.has(n) && now>start+(n+countIn)*interval+tolerance) lamps[n].classList.add("miss");
       }
-      if (now>start+(countIn+total-1)*interval+tolerance+70) finish(now);
+      if (now>start+(countIn+total-1)*interval+tolerance+70) finish();
     }
-    if (mode==="dance") {
-      const beats=(now-finishAt)/interval;
-      if (!reduceMotion.matches) pose(Math.min(5,beats*5/8));
-      if (reduceMotion.matches || beats>=8) mode="done";
-    }
-    if (mode==="play" || mode==="dance") frame=requestAnimationFrame(draw);
+    if (mode==="play") frame=requestAnimationFrame(draw);
   }
   function begin() {
     reset();mode="play";start=performance.now()+240;scheduleAudio(true);
@@ -115,7 +110,7 @@
       for(const osc of activeClicks) {try{osc.stop();}catch{}}
     }
   });
-  function pauseIfPlaying() {if(mode==="play" || mode==="dance") reset();}
+  function pauseIfPlaying() {if(mode==="play") reset();}
   document.addEventListener("visibilitychange",()=>{if(document.hidden)pauseIfPlaying();});
   window.addEventListener("pagehide",pauseIfPlaying);
   new IntersectionObserver(([entry])=>{if(!entry.isIntersecting)pauseIfPlaying();}).observe(stage);

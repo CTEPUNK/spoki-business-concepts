@@ -40,9 +40,9 @@ function chrome(pagePath) {
     '<a href="' + contactPath + '" class="header-contact"><span>Контакты ' + ico("arrow","arrow") +
     '</span></a></div></div><nav class="mobile-primary" aria-label="Быстрые переходы">' + primary.slice(0,4).map(link).join("") + '</nav></header>';
   const footer = '<footer class="site-footer"><div class="wrap footer-map"><div class="footer-identity">' + brand +
-    '<p>Школа аргентинского танго<br>Москва, м. Смоленская</p>' + link(["Контакты и адрес","kontakty/"]) + '</div>' + groups +
-    '</div><div class="wrap footer-inner"><a class="text-link" href="https://tangocity.ru/">Официальный сайт школы ' +
-    ico("arrow","arrow") + '</a>' + link(["Все страницы","karta-sayta/"]) + '<span>Сайт создан Spoki Studio</span></div></footer>';
+    '<p>Школа аргентинского танго<br>в Москве</p>' + link(["Контакты и адрес","kontakty/"]) + '</div>' + groups +
+    '</div><div class="wrap footer-inner"><a class="footer-signature" href="' + base + '">Tango<i>City</i></a>' +
+    link(["Все страницы","karta-sayta/"]) + '<span>Сайт создан Spoki Studio</span></div></footer>';
   return { header, footer };
 }
 async function visit(dir) {
@@ -55,7 +55,13 @@ async function visit(dir) {
     const old = await readFile(path,"utf8");
     if (!old.includes('<header class="site-header"') || !old.includes('<footer class="site-footer"')) throw new Error("Missing layout slot in " + path);
     const html = old.replace(/<header class="site-header">[\s\S]*?<\/header>/,header)
-      .replace(/<footer class="site-footer">[\s\S]*?<\/footer>/,footer);
+      .replace(/<footer class="site-footer">[\s\S]*?<\/footer>/,footer)
+      .replace(/assets\/ui\.svg(?:\?v=[\d.]+)?#/g,"assets/ui.svg?v=3#")
+      .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=3#")
+      .replace(/assets\/mark\.svg(?:\?v=[\d.]+)?"/g,'assets/mark.svg?v=3"')
+      .replace(/(site\.js|app\.js|rhythm\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
+      .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*<link rel="stylesheet" href="[^"]*dance\.css">)?/g,
+        '$1<link rel="stylesheet" href="$2dance.css">');
     if (old !== html) await writeFile(path,html);
   }
 }
@@ -66,7 +72,7 @@ async function timetablePage() {
   const booking = home.match(/<dialog id="booking"[\s\S]*?<\/dialog>/)?.[0];
   if (!schedule || !booking) throw new Error("Missing schedule or booking markup in the homepage");
   const page = '<!doctype html>\n<html lang="ru" data-base="../../"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' +
-    '<meta name="robots" content="noindex,follow"><meta name="description" content="Датированные групповые занятия TangoCity. Выберите уровень, дату и преподавателя в зале на Смоленской.">' +
+    '<meta name="robots" content="noindex,follow"><meta name="description" content="Групповые занятия TangoCity. Выберите уровень, дату и преподавателя.">' +
     '<title>Расписание занятий — TangoCity</title><link rel="icon" href="../../assets/mark.svg"><link rel="stylesheet" href="../../assets/fonts/fonts.css">' +
     '<link rel="stylesheet" href="../../style.css"><link rel="stylesheet" href="../../sections.css">' +
     ["site.js","schedule.js?v=2","school-calendar.js","app.js?v=2"].map(src => '<script defer src="../../'+src+'"></script>').join("") +
@@ -74,10 +80,14 @@ async function timetablePage() {
     '<main class="standalone-schedule"><div class="wrap"><nav class="crumb" aria-label="Путь по сайту"><a href="../../">Главная</a><span aria-hidden="true">/</span><a href="../">Школа</a><span aria-hidden="true">/</span><span>Расписание</span></nav></div>\n' +
     schedule.replaceAll("./assets/","../../assets/").replace('<h2 id="schedule-title">Расписание</h2>','<h1 id="schedule-title">Расписание</h1>') +
     '<div class="wrap folio-source"><a class="text-link" href="../../nabor-novichkov/">Как выбрать группу</a><a class="text-link" href="../stoimost/">Цены и абонементы</a></div></main>' +
-    '<footer class="site-footer"></footer>\n' + booking.replaceAll("./assets/","../../assets/") + '\n</body></html>\n';
+    '<footer class="site-footer"></footer>\n' + booking.replaceAll("./assets/","../../assets/").replaceAll("./kontakty/","../../kontakty/") + '\n</body></html>\n';
   const dir=join(root,"shkola","raspisanie");
   await mkdir(dir,{recursive:true});
   await writeFile(join(dir,"index.html"), page);
 }
+const homePath=join(root,"index.html");
+const home=await readFile(homePath,"utf8");
+const drawing=(await readFile(join(root,"assets","abrazo.svg"),"utf8")).trim();
+await writeFile(homePath,home.replace(/<!-- dancers -->[\s\S]*?<!-- end dancers -->/g,"<!-- dancers -->"+drawing+"<!-- end dancers -->"));
 await timetablePage();
 await visit(root);

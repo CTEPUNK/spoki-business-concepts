@@ -15,27 +15,21 @@ if (siteMenu) {
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
-const scenes = [...document.querySelectorAll(".scene")];
 let pointerFrame = 0;
 let currentTarget;
 let mouseX = 0;
 let mouseY = 0;
 function moveDecoration(target, x, y) {
-  const smallX = (x * 5).toFixed(2) + "px";
   const smallY = (y * 4).toFixed(2) + "px";
   target.style.setProperty("--px", (x * 9).toFixed(2) + "px");
   target.style.setProperty("--py", smallY);
-  target.style.setProperty("--ax", smallX);
-  target.style.setProperty("--ay", smallY);
-  target.style.setProperty("--floor-x", smallX);
-  target.style.setProperty("--floor-y", smallY);
   target.style.setProperty("--tilt", (x * .65).toFixed(2) + "deg");
   target.style.setProperty("--mx", (x * 3).toFixed(2) + "px");
   target.style.setProperty("--my", (y * 2).toFixed(2) + "px");
 }
 document.addEventListener("pointermove", event => {
   if (reduceMotion.matches || !finePointer.matches || event.pointerType === "touch") return;
-  const target = event.target.closest(".class-card, .header-contact, .scene");
+  const target = event.target.closest(".header-contact, .scene");
   if (target !== currentTarget) {
     if (currentTarget) moveDecoration(currentTarget, 0, 0);
     currentTarget = target;
@@ -57,21 +51,59 @@ document.addEventListener("pointerout", event => {
     currentTarget = null;
   }
 });
-let scrollFrame = 0;
-function drawOnScroll() {
-  scrollFrame = 0;
-  if (reduceMotion.matches) return;
-  const height = window.innerHeight;
-  for (const scene of scenes) {
-    const rect = scene.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > height) continue;
-    const travel = Math.max(0, Math.min(1, (height - rect.top) / (height * .57 + rect.height * .32)));
-    scene.style.setProperty("--trail-gap", (1 - travel).toFixed(3));
-    if (scene.classList.contains("hero")) scene.style.setProperty("--scroll-x", Math.min(18, Math.max(0,-rect.top) * .075).toFixed(2) + "px");
+
+
+
+// The cursor has two soles. Footprints are left at travelled distances in the
+// visual fields. Text, links, form controls and the map retain native cursors.
+(() => {
+  const selector=".hero, .rhythm, .first-lesson, .folio-hero";
+  const native="a, button, summary, label, input, textarea, iframe, video, p, h1, h2, h3, figcaption, output, .faq, .phase-controls";
+  const base=document.documentElement.dataset.base || "./";
+  const href=base+"assets/ui.svg?v=3#heel";
+  const cursor=document.createElement("div");
+  cursor.className="shoe-cursor";cursor.hidden=true;cursor.setAttribute("aria-hidden","true");
+  cursor.innerHTML='<svg viewBox="0 0 42 46"><g class="shoe-left"><use href="'+href+'" x="-6" y="-12" width="13" height="26"/></g><g class="shoe-right"><use href="'+href+'" x="-6" y="-12" width="13" height="26"/></g></svg>';
+  const tracks=document.createElement("div");
+  tracks.className="cursor-tracks";tracks.setAttribute("aria-hidden","true");
+  document.body.append(tracks,cursor);
+  let field=null,lastX=0,lastY=0,lastTime=0,heading=0,left=false;
+  function clear() {
+    field?.classList.remove("has-shoe-cursor");field=null;cursor.hidden=true;tracks.replaceChildren();
   }
-}
-function scheduleDrawing() { if (!scrollFrame) scrollFrame = requestAnimationFrame(drawOnScroll); }
-window.addEventListener("scroll", scheduleDrawing, { passive: true });
-window.addEventListener("resize", scheduleDrawing, { passive: true });
-reduceMotion.addEventListener("change", scheduleDrawing);
-scheduleDrawing();
+  function stamp(x,y,angle,light){
+    const el=document.createElement("span");
+    const a=angle*Math.PI/180, side=left?-5:5;
+    el.className="shoe-stamp"+(light?" on-wine":"");
+    el.style.left=(x+Math.cos(a)*side)+"px";el.style.top=(y+Math.sin(a)*side)+"px";
+    el.style.setProperty("--angle",angle+"deg");el.style.setProperty("--flip",left?"-1":"1");
+    el.innerHTML='<svg viewBox="0 0 13 26"><use href="'+href+'" width="13" height="26"/></svg>';
+    if(tracks.children.length>=10)tracks.firstElementChild.remove();
+    tracks.append(el);el.addEventListener("animationend",()=>el.remove(),{once:true});
+    left=!left;cursor.classList.toggle("left-leads",left);
+  }
+  document.addEventListener("pointermove",e=>{
+    if(e.pointerType!=="mouse" || !finePointer.matches || reduceMotion.matches) {if(field)clear();return;}
+    const next=e.target.closest(selector);
+    if(!next || e.target.closest(native)) {if(field)clear();return;}
+    const light=next.classList.contains("dark");
+    const now=performance.now(), x=e.clientX,y=e.clientY;
+    if(next!==field){
+      clear();field=next;field.classList.add("has-shoe-cursor");cursor.hidden=false;
+      lastX=x;lastY=y;lastTime=now;heading=-15;
+      stamp(x-6,y+8,heading,light);
+    }else{
+      const dx=x-lastX,dy=y-lastY;
+      if(Math.hypot(dx,dy)>=17 && now-lastTime>=45) {
+        heading=Math.atan2(dy,dx)*180/Math.PI+90;
+        stamp(lastX,lastY,heading,light);lastX=x;lastY=y;lastTime=now;
+      }
+    }
+    cursor.classList.toggle("on-wine",light);
+    cursor.style.transform="translate("+x+"px,"+y+"px) translate(-50%,-50%) rotate("+heading+"deg)";
+  },{passive:true});
+  document.addEventListener("pointerout",e=>{if(!e.relatedTarget)clear();});
+  window.addEventListener("blur",clear);
+  window.addEventListener("scroll",clear,{passive:true});
+  reduceMotion.addEventListener("change",clear);finePointer.addEventListener("change",clear);
+})();

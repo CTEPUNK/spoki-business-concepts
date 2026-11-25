@@ -19,7 +19,6 @@
 .footer-inner { border-top: 1px solid var(--rule); }
 .hero { background-image: radial-gradient(ellipse at 74% 52%, #47252e 0, #301b23 45%, #281920 76%); }
 .hero-art { inset: 0 0 0 auto; width: 53%; padding: .75rem .35rem; grid-template: minmax(0,1fr) / minmax(0,1fr); }
-.hero-art img { min-width: 0; min-height: 0; object-position: 50% 52%; }
 .home-journal { background: #efe5d7; border-block: 1px solid var(--rule); padding-block: clamp(2.6rem,4.3vw,4rem); }
 .home-journal h2 { font-size: clamp(2.35rem,4.2vw,3.8rem); }
 .journal-links { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.7rem; margin-top: 1.45rem; }

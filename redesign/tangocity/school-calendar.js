@@ -56,20 +56,24 @@ function parseSchoolCalendar(rendered, now) {
   for (const row of table.querySelectorAll("tbody tr")) {
     if (!row.querySelector(".col-date")) continue;
     const date = schoolDate(row, today);
-    if (!date || (dates.length && date <= dates[dates.length - 1])) return null;
-    dates.push(date);
-    const room = row.querySelector(".col-addr")?.textContent.trim() || "";
-    if (!/^зал\s*1\s+смоленская$/iu.test(room)) continue;
+    if (!date || (dates.length && date < dates[dates.length - 1])) return null;
+    if (!dates.length || date > dates[dates.length - 1]) dates.push(date);
+    const venueCell=row.querySelector(".col-addr");
+    const rooms=venueCell?.querySelectorAll(".sess-block");
     const names = row.querySelectorAll(".col-group .sess-block");
     const times = row.querySelectorAll(".col-time .sess-block");
     const prices = row.querySelectorAll(".col-price .sess-block");
     names.forEach((name, index) => {
       const id = knownGroup(name.textContent);
+      const venue=rooms?.length ? rooms.length===names.length && rooms[index] : venueCell;
+      const room=venue?.textContent?.replace(/\s+/g," ").trim();
+      if (!room || /^все залы$/iu.test(room) || room.length>200) return;
+      const place=/^зал\s*[№#]?\s*1[\s·,–—-]+(?:м\.\s*)?смоленская$/iu.test(room) ? "" : room;
       const time = /^(\d{2}:\d{2})\s*[-–—]\s*(\d{2}:\d{2})$/.exec(times[index]?.textContent.trim() || "");
       if (!id || !time || time[1] >= time[2] || ![time[1],time[2]].every(t => /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(t))) return;
       const rate = readFee(prices[index]);
-      const key = [id,time[1],time[2]].join("/");
-      entries.push({ date: date.toISOString().slice(0,10), id, start: time[1], end: time[2], rate, key });
+      const key = [id,time[1],time[2],place].join("/");
+      entries.push({ date: date.toISOString().slice(0,10), id, start: time[1], end: time[2], place, rate, key });
       if (rate) {
         if (!feesByGroup.has(key)) feesByGroup.set(key, new Map());
         feesByGroup.get(key).set(rate.fee + "/" + rate.units, rate);
@@ -82,6 +86,7 @@ function parseSchoolCalendar(rendered, now) {
   const periodPart = d => d.getUTCDate() + " " + calendarMonths[d.getUTCMonth()];
   const period = periodPart(first) + (first.getUTCFullYear() !== last.getUTCFullYear() ? " " + first.getUTCFullYear() : "") +
     " — " + periodPart(last) + " " + last.getUTCFullYear();
+  entries.sort((a,b)=>a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
   const lessons = entries.map(entry => {
     const otherRates = feesByGroup.get(entry.key);
     // A Tuesday line can lack the second tariff. Use a matching explicit rate
@@ -89,7 +94,7 @@ function parseSchoolCalendar(rendered, now) {
     const rate = entry.rate || (otherRates?.size === 1 ? otherRates.values().next().value : null);
     return {
       date: entry.date,
-      group: { ...tangoSchedule.groups[entry.id], start: entry.start, end: entry.end, fee: rate?.fee ?? null, units: rate?.units ?? null }
+      group: { ...tangoSchedule.groups[entry.id], start: entry.start, end: entry.end, place:entry.place, fee: rate?.fee ?? null, units: rate?.units ?? null }
     };
   });
   return { period, lessons };

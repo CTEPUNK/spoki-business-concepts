@@ -12,6 +12,15 @@ function updateEnrollment() {
     nextStarts.set(card, next ? startsAt(next) : Infinity);
     const when = card.querySelector(".enroll-when");
     const price = card.querySelector(".enroll-price");
+    let place = card.querySelector(".venue-change");
+    if (next?.group.place) {
+      if (!place) {
+        place=document.createElement("p");
+        place.className="venue-change";
+        card.querySelector(".enroll-next").append(place);
+      }
+      place.textContent="Место занятия · "+next.group.place;
+    } else place?.remove();
     if (next) {
       const time = document.createElement("time");
       time.dateTime = next.date + "T" + next.group.start + ":00+03:00";

@@ -6,14 +6,6 @@
 .footer-signature { font:500 clamp(1.55rem,2.5vw,2.25rem)/1.1 var(--serif); letter-spacing:-.07em; }
 .brand svg { overflow:visible; }
 
-.hero-art { padding:.4rem 0 2.85rem; }
-.hero-art .dance-drawing { display:block; width:100%;height:100%; min-height:0; }
-.phase-controls { position:absolute;right:14%;bottom:.55rem;display:flex;align-items:center;gap:.25rem;z-index:2;color:#ebbeac; }
-.phase-controls output { min-width:5.4em;text-align:center;font-size:.95rem;letter-spacing:.035em; }
-.phase-controls button { display:grid;place-items:center;background:transparent;color:inherit;border:1px solid transparent;border-radius:50%;width:2.75rem;height:2.75rem;padding:.25rem; }
-.phase-controls button:is(:hover,:focus-visible) { border-color:#ab7d72;color:#ffddca; }
-.phase-controls button:first-child svg { transform:rotate(90deg); }
-.phase-controls button:last-child svg { transform:rotate(-90deg); }
 .shoe-cursor,.cursor-tracks,.shoe-stamp { position:fixed;pointer-events:none;z-index:8; }
 .shoe-cursor { top:0;left:0;width:32px;height:36px;color:#722d3f; }
 .shoe-cursor svg,.shoe-stamp svg { width:100%;height:100%;overflow:visible; }
@@ -54,7 +46,7 @@
 
 .meter-stage { position:relative;display:grid;place-items:center; min-height:19rem; overflow:hidden; background:radial-gradient(ellipse at 50% 50%,#593338,#321e27 71%); border:1px solid #76494c; border-radius:48% 48% .45rem .45rem / 11% 11% .45rem .45rem; }
 .meter-frame,.winning-dance { grid-area:1/1;width:100%;max-width:30.5rem;padding:.25rem 1.6rem 2.8rem; }
-.metronome,.winning-dance svg { width:100%;height:14.9rem; }
+.metronome,.winning-dance img { display:block;width:100%;height:14.9rem;object-fit:contain; }
 .metro-arm { transform-origin:200px 225px; }
 .metro-readout { position:absolute;bottom:.85rem;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:.5rem;font:550 .95rem/1.3 var(--sans);color:#f1ccaf; }
 .metro-readout small { font-size:.9em; }
@@ -73,9 +65,10 @@
 .mast-plate { margin:0; min-width:0; justify-self:center; }
 .mast-plate img,.teacher-heading img,.additional-cover img,.cover-link img,.collection-thumb { display:block;max-width:100%; }
 .mast-plate img { width:auto;height:auto;max-height:clamp(13rem,25vw,20rem);object-fit:contain; }
-.mast-plate.jacket img,.mast-plate.sleeve img,.additional-cover img { box-shadow:0 .55rem 1.25rem #2e181e22; }
-.mast-plate.jacket img { max-height:clamp(12rem,23vw,18.75rem); }
-.mast-plate.plate-tango-bar-1935 img { max-height:15rem; }
+.film-poster { aspect-ratio:2/3; }
+.book-cover { aspect-ratio:13/20; }
+.mast-plate.jacket { width:min(100%,clamp(10rem,18vw,13rem)); }
+.mast-plate.jacket img { width:100%;height:auto;max-height:none;object-fit:cover; }
 .mast-plate figcaption { color:var(--folio-soft);font-size:.9rem;margin-top:.45rem; }
 .mast-plate.portrait img { width:100%;max-width:19rem;height:clamp(13rem,24vw,19rem);object-fit:cover;border-radius:48% 48% .15rem .15rem / 25% 25% .15rem .15rem;object-position:50% 29%; }
 .mast-plate.plate-alan-cagolov img,.teacher-heading img[src*="alan-cagolov"] { object-position:83% 37%; }
@@ -85,30 +78,26 @@
 .teacher-heading { display:flex;align-items:center;gap:1.15rem;flex-wrap:wrap; }
 .teacher-heading img { width:clamp(6rem,10vw,9rem);height:clamp(7rem,12vw,10.25rem);object-fit:cover;object-position:center 26%;border-radius:46% 46% .15rem .15rem / 23% 23% .15rem .15rem; }
 .teacher-heading h2 { flex:1 1 9rem; }
-.cover-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.25rem clamp(1rem,3vw,3rem);margin-top:1.5rem; }
+.cover-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:2.25rem clamp(1rem,2.8vw,2.5rem);margin-top:1.5rem; }
 .catalogue-item { min-width:0;display:flex;align-items:flex-start;flex-direction:column; }
-.cover-link { width:100%;display:grid;place-items:center;padding:.85rem;background:#eae2d8;border-radius:.25rem; }
-.cover-link img { height:clamp(11rem,15vw,14.25rem);width:100%;object-fit:contain;transition:transform .22s ease; }
-.cover-link:is(:hover,:focus-visible) img { transform:translateY(-3px); }
+.cover-link { display:block;width:100%; }
+.cover-link img { width:100%;height:auto;object-fit:cover; }
+.catalogue-item:has(.cover-link:hover) h3 { color:var(--wine); }
 .catalogue-item .entry-meta { margin:.68rem 0 .23rem; }
 .catalogue-item .line-content p { margin:.34rem 0 0; }
 .catalogue-item .text-link { margin-top:auto; }
 .additional-cover { display:flex;align-items:center;gap:1.1rem; }
-.additional-cover img { width:6rem;height:auto; }
+.additional-cover img { width:6rem;height:auto;flex:none;object-fit:cover; }
 .collection-thumb { width:6rem;height:7.2rem;object-fit:contain;object-position:left center;margin:.55rem 0; }
-.video-entry video { background:#291b22; }
+.collection-thumb:is(.film-poster,.book-cover) { height:auto;object-fit:cover; }
+.video-entry video { aspect-ratio:16/9;background:#291b22;border-radius:0; }
 
 @media(min-width:43.01rem) and (max-width:62rem) { .class-list { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:43rem) {
- .hero-art { padding:.2rem 0 1.5rem; }
- .phase-controls { right:0;bottom:.08rem;gap:0; }
- .phase-controls output { min-width:4.4em;font-size:.86rem; }
- .phase-controls button { width:2rem;height:2.75rem; }
- .hero-copy { padding-bottom:2.6rem; }
  .first-intro .lesson-walk { max-width:19.5rem;margin-top:.7rem; }
  .first-intro .first-trail { position:static;height:auto;width:100%; }
  .meter-stage { min-height:15.7rem; }
- .metronome,.winning-dance svg { height:12.25rem; }
+ .metronome,.winning-dance img { height:12.25rem; }
  .beat-score { margin-bottom:.15rem; }
  .folio-mast:has(.mast-plate) { grid-template-columns:minmax(0,1fr) clamp(5.6rem,26vw,10rem);align-items:start;gap:.8rem; }
  .folio-mast:has(.mast-plate)>div:first-child { display:contents; }
@@ -124,21 +113,17 @@
  .folio-art.motion-route svg { width:clamp(8rem,43vw,12.8rem);height:5.8rem;flex:none; }
  .motion-route figcaption { text-align:left;margin:0; }
  .cover-grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem .75rem; }
- .cover-link { padding:.45rem; }
- .cover-link img { height:clamp(8.4rem,38vw,12.7rem); }
  .catalogue-item h3 { font-size:clamp(1.35rem,5.1vw,1.7rem);overflow-wrap:break-word; }
  .catalogue-item .line-content p { font-size:1rem; }
  .teacher-heading { flex-wrap:nowrap; }
 }
 @media(max-width:25rem) {
- .hero-art { inset:18% -11% 8% auto; width:73%; }
- .phase-controls { right:-.17rem; }
  .card-heading time b { font-size:3.5rem; }
  .card-time strong { font-size:2.16rem; }
  .folio-mast:has(.mast-plate) h1 { font-size:clamp(2rem,8vw,2.55rem); }
 }
 @media(prefers-reduced-motion:reduce) {
- .header-contact::before,.header-contact span,.cover-link img,.metro-arm { transform:none !important; }
+ .header-contact::before,.header-contact span,.metro-arm { transform:none !important; }
  .shoe-cursor,.cursor-tracks { display:none; }
  .hero-art,.meter-stage,.motion-route { cursor:auto; }
  .walk-line { stroke-dashoffset:0; }

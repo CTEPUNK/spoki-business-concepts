@@ -47,7 +47,18 @@ contactLink.addEventListener('pointerleave', magnetReset);
 
 const hero = document.querySelector('.hero');
 const plate = document.querySelector('.plate');
-const scenes = [...document.querySelectorAll('.motion-scene')];
+const allScenes = document.querySelectorAll('.motion-scene');
+const scenes = new Set(allScenes);
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) scenes.add(entry.target);
+      else scenes.delete(entry.target);
+    }
+    requestMotion();
+  }, {rootMargin: '180px 0px'});
+  for (const scene of allScenes) observer.observe(scene);
+}
 let frame = 0;
 let aimX = 0, aimY = 0;
 function setStyle(element, key, value) { element.style.setProperty('--' + key, value); }

@@ -31,3 +31,26 @@ const tangoSchedule = {
     ["2026-12-06", ["beginner", "zero1"]]
   ]
 };
+
+const dayFormat = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" });
+const weekFormat = new Intl.DateTimeFormat("ru-RU", { weekday: "long", timeZone: "UTC" });
+const priceFormat = new Intl.NumberFormat("ru-RU");
+
+function publishedLessons() {
+  return tangoSchedule.days.flatMap(([date, ids]) => ids.map(id => ({ group: tangoSchedule.groups[id], date })));
+}
+function timeRange(group) {
+  return group.start + "–" + group.end;
+}
+function feeUnit(group) {
+  return group.units === 2 ? "за 2 урока" : "за 1 урок";
+}
+function calendarParts(lesson) {
+  if (!lesson.date) return { day: "Регулярная группа", date: lesson.group.weekly };
+  const utcDate = new Date(lesson.date + "T12:00:00Z");
+  const weekday = weekFormat.format(utcDate);
+  return { day: weekday.charAt(0).toUpperCase() + weekday.slice(1), date: dayFormat.format(utcDate) };
+}
+function startsAt(lesson) {
+  return Date.parse(lesson.date + "T" + lesson.group.start + ":00+03:00");
+}

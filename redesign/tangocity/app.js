@@ -1,7 +1,7 @@
 "use strict";
 
 const byId = (id) => document.getElementById(id);
-const spriteUrl = (document.documentElement.dataset.base || "./") + "assets/ui.svg#";
+const spriteUrl = (document.documentElement.dataset.base || "./") + "assets/ui.svg?v=3#";
 let allLessons = publishedLessons();
 let schedulePeriod = tangoSchedule.period;
 const pageSize = 3;
@@ -17,31 +17,25 @@ function icon(name, className = "icon") {
   return '<svg class="' + className + '" aria-hidden="true"><use href="' + spriteUrl + name + '"/></svg>';
 }
 
-function cardArt(index) {
-  const drawing = [
-    { line: "M5 50C6 30 48 40 44 5", x: 21, y: 26, angle: 42 },
-    { line: "M4 49C26 51 8 14 49 9", x: 18, y: 24, angle: 20 },
-    { line: "M8 50C49 44 17 18 48 4", x: 26, y: 24, angle: 13 }
-  ][index % 3];
-  return '<svg viewBox="0 0 54 56" class="card-art" aria-hidden="true"><path class="trace" d="' + drawing.line +
-    '"/><g transform="translate(' + drawing.x + ' ' + drawing.y + ') rotate(' + drawing.angle +
-    ')"><use href="' + spriteUrl + 'sole" x="-5" y="-1" width="7" height="15"/><use href="' + spriteUrl + 'sole" x="2" y="-12" width="7" height="15"/></g></svg>';
-}
-
-function makeCard(lesson, index) {
+function makeCard(lesson) {
   const { group, date } = lesson;
   const stamp = calendarParts(lesson);
   const card = document.createElement("article");
   card.className = "class-card";
-  card.innerHTML = '<div class="card-heading"><p class="card-day">' + stamp.day + '</p><h3 tabindex="-1">' +
-    (date ? '<time datetime="' + date + '">' + stamp.date + '</time>' : stamp.date) + '</h3></div>' +
-    cardArt(index) + '<p class="card-time">' + icon("i-clock") + timeRange(group) + '</p>' +
-    '<div class="card-body"><p class="card-group">' + group.title + '</p><p class="card-place">' +
-    icon("i-pin") + '<span><span>м. Смоленская · зал 1</span><span>Смоленская-Сенная пл., 27с7</span></span></p></div>' +
+  const [dayNumber,month] = stamp.date.split(" ");
+  const dayLabel = date ? '<time datetime="' + date + '"><b>' + dayNumber + '</b> <small>' + month + '</small></time>' : stamp.date;
+  card.innerHTML = '<p class="card-day">' + stamp.day + '</p><div class="card-heading"><h3 tabindex="-1">' + dayLabel +
+    '</h3><p class="card-time"><strong>' + group.start + '</strong> <small>до ' + group.end + '</small></p></div>' +
+    '<div class="card-body"><p class="card-group">' + group.title + '</p></div>' +
     '<div class="card-footer"><p class="price">' + (group.fee === null ? 'Уточнить<small>стоимость' : priceFormat.format(group.fee) + ' ₽<small>' + feeUnit(group)) +
     '</small></p><button type="button" class="button primary">Записаться ' + icon("i-arrow","arrow") + '</button></div>';
+  if (group.place) {
+    const place=document.createElement("p");
+    place.className="venue-change"; place.textContent="Место занятия · "+group.place;
+    card.querySelector(".card-body").append(place);
+  }
   const trigger = card.querySelector("button");
-  trigger.dataset.lesson = group.title + "/" + (date || "");
+  trigger.dataset.lesson = [group.title,date || "",group.start,group.place || ""].join("/");
   trigger.setAttribute("aria-label", "Записаться: " + group.title + ", " + stamp.date + ", " + group.start);
   trigger.addEventListener("click", () => openBooking(lesson, trigger));
   return card;
@@ -128,6 +122,9 @@ function openBooking(lesson, trigger) {
   const teacher = tangoSchedule.teachers[group.teacher];
   const stamp = calendarParts(lesson);
   resetMessage();
+  const place=byId("booking-venue");
+  place.hidden=!group.place;place.textContent=group.place || "";
+  booking.querySelector(".booking-directions").hidden=Boolean(group.place);
   byId("booking-title").textContent = group.title;
   byId("booking-when").innerHTML = (date ? stamp.day + ", " + stamp.date : group.weekly + " · дату уточните") +
     ' <span class="time-with-zone">· ' + timeRange(group) + ' мск</span>';
@@ -167,7 +164,7 @@ messageForm.addEventListener("submit", event => {
   const visit = date ? stamp.date : "в один из дней по расписанию (" + group.weekly.toLowerCase() + ")";
   const solo = new FormData(messageForm).get("party") === "solo";
   byId("prepared-message").value = "Здравствуйте! " + (solo ? "Хочу записаться" : "Хотим записаться вдвоём") +
-    " на танго в группу «" + group.title + "» " + visit + ", " + timeRange(group) + ", зал на Смоленской. " +
+    " на танго в группу «" + group.title + "» " + visit + ", " + timeRange(group) + (group.place ? ", "+group.place : "") + ". " +
     (solo ? "Приду без пары. " : "") + "Подскажите, пожалуйста, есть ли место и сколько будет стоить занятие?";
   messageForm.hidden = true;
   byId("message-result").hidden = false;
@@ -196,7 +193,7 @@ byId("schedule-controls").hidden = false;
 byId("schedule-fallback").hidden = true;
 function lessonDetails(lesson) {
   const {group, date} = lesson;
-  return [date,group.title,group.start,group.end,group.fee,group.units].join("/");
+  return [date,group.title,group.start,group.end,group.fee,group.units,group.place || ""].join("/");
 }
 function currentCardButton(key) {
   return [...document.querySelectorAll(".class-card button")].find(button => button.dataset.lesson === key);

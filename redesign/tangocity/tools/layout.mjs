@@ -59,7 +59,8 @@ async function visit(dir) {
       .replace(/assets\/ui\.svg(?:\?v=[\d.]+)?#/g,"assets/ui.svg?v=3#")
       .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=3#")
       .replace(/assets\/mark\.svg(?:\?v=[\d.]+)?"/g,'assets/mark.svg?v=3"')
-      .replace(/(site\.js|app\.js|rhythm\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
+      .replace(/(site\.js|app\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
+      .replace(/rhythm\.js(?:\?v=[\d.]+)?"/g,'rhythm.js?v=3.1"')
       .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*<link rel="stylesheet" href="[^"]*dance\.css">)?/g,
         '$1<link rel="stylesheet" href="$2dance.css">');
     if (old !== html) await writeFile(path,html);

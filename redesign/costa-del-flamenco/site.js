@@ -7,7 +7,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 function setUpHeader() {
   const menu = one('#main-nav');
   const toggle = one('.menu-toggle');
-  const mobile = window.matchMedia('(max-width: 700px)');
+  const mobile = window.matchMedia('(max-width: 860px)');
   function setOpen(open) {
     menu.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
@@ -32,6 +32,24 @@ function setUpHeader() {
     if (!event.target.closest('.mast')) setOpen(false);
   });
   mobile.addEventListener('change', () => setOpen(false));
+  menu.addEventListener('click', event => {
+    if (event.target.closest('a')) setOpen(false);
+  });
+  if (document.body.dataset.page === 'school') {
+    const schoolLinks = all('a[href^="school.html#"]',menu);
+    function markSchoolLink(fragment) {
+      schoolLinks.forEach(item => {
+        if (item.hash === fragment) item.setAttribute('aria-current','location');
+        else item.removeAttribute('aria-current');
+      });
+    }
+    const markLocation = () => markSchoolLink(location.hash === '#prices' ? '#prices' : '#raspisanie');
+    markLocation();
+    schoolLinks.forEach(item => item.addEventListener('click',event=>{
+      if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) markSchoolLink(item.hash);
+    }));
+    window.addEventListener('hashchange',markLocation);
+  }
 
   const magnet = one('.contact-magnet');
   const face = one('.magnet-face', magnet);
@@ -205,8 +223,7 @@ function setUpForm() {
 
 function updateDatedEvent() {
   if (Date.now()<Date.parse('2026-11-28T19:30:00+03:00')) return;
-  const label=one('[data-event-label]');
-  if(label) label.textContent='Из афиши театра';
+  all('[data-event-label]').forEach(label => {label.textContent='Из афиши театра';});
   const link=one('[data-ticket]');
   if (link) {
     link.href='https://safina.ru/news/';
@@ -216,8 +233,190 @@ function updateDatedEvent() {
   }
   const homeAction=one('.hero-primary span');
   if(homeAction) homeAction.textContent='О спектакле';
+  all('[data-show-action] span').forEach(span => {span.textContent='О спектакле';});
+}
+function setUpSectionIndex() {
+  const nav = one('.section-index');
+  if (!nav) return;
+  const toggle = one('.index-toggle',nav);
+  const links = all('#section-links a',nav);
+  const chapters = links.map(link => document.getElementById(link.hash.slice(1)));
+  const name = one('.index-now',nav);
+  let current = -2;
+  let scheduled = false;
+  function setOpen(open) {
+    nav.classList.toggle('is-open',open);
+    toggle.setAttribute('aria-expanded',String(open));
+  }
+  function update() {
+    scheduled = false;
+    const line = one('.mast').getBoundingClientRect().bottom + nav.offsetHeight + 38;
+    let index = -1;
+    for (let i=0; i<chapters.length; i++) {
+      if (chapters[i].getBoundingClientRect().top <= line) index=i;
+    }
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight-2) index=chapters.length-1;
+    if (index === current) return;
+    current = index;
+    name.textContent = index < 0 ? 'Разделы' : links[index].textContent;
+    links.forEach((link,i) => {
+      if (i === index) link.setAttribute('aria-current','location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+  function schedule() {
+    if (!scheduled) {scheduled=true;requestAnimationFrame(update);}
+  }
+  toggle.addEventListener('click',()=>setOpen(!nav.classList.contains('is-open')));
+  nav.addEventListener('click',event=>{
+    const link=event.target.closest('a[href^="#"]');
+    if (!link) return;
+    setOpen(false);
+    const section=document.getElementById(link.hash.slice(1));
+    section.setAttribute('tabindex','-1');
+    section.focus({preventScroll:true});
+    schedule();
+  });
+  document.addEventListener('keydown',event=>{
+    if (event.key==='Escape' && nav.classList.contains('is-open')) {
+      setOpen(false);toggle.focus({preventScroll:true});
+    }
+  });
+  const closeOutside=event=>{if (!nav.contains(event.target)) setOpen(false);};
+  document.addEventListener('pointerdown',closeOutside);
+  document.addEventListener('focusin',closeOutside);
+  window.matchMedia('(max-width: 1050px)').addEventListener('change',()=>setOpen(false));
+  window.addEventListener('scroll',schedule,{passive:true});
+  window.addEventListener('resize',schedule);
+  window.addEventListener('load',schedule,{once:true});
+  update();
+}
+
+function setUpPhotoViewer() {
+  const dialog = one('.viewer');
+  if (!dialog || typeof dialog.showModal !== 'function') return;
+  const triggers = all('.photo-open');
+  const stage = one('.viewer-stage',dialog);
+  const controls = one('.viewer-controls',dialog);
+  const image = document.createElement('img');
+  image.draggable = false;
+  let album = [];
+  let index = 0;
+  let trigger = null;
+  let swipe = null;
+  function show(i) {
+    index=(i + album.length) % album.length;
+    const item=album[index];
+    if (!image.isConnected) stage.append(image);
+    image.alt=one('img',item.parentElement).alt;
+    image.src=item.href;
+    one('#viewer-count',dialog).textContent='Фото '+(index+1)+' из '+album.length;
+    one('#viewer-title',dialog).textContent=item.dataset.title;
+    controls.hidden=album.length<2;
+  }
+  triggers.forEach(link=>link.addEventListener('click',event=>{
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    trigger=link;
+    album=triggers.filter(item=>item.dataset.album===link.dataset.album);
+    show(album.indexOf(link));
+    dialog.showModal();
+  }));
+  controls.addEventListener('click',event=>{
+    const step=event.target.closest('[data-step]');
+    if(step) show(index+Number(step.dataset.step));
+  });
+  dialog.addEventListener('keydown',event=>{
+    if(album.length>1 && (event.key==='ArrowLeft' || event.key==='ArrowRight')) {
+      event.preventDefault();show(index+(event.key==='ArrowRight'?1:-1));
+    }
+  });
+  stage.addEventListener('pointerdown',event=>{
+    if(event.isPrimary && event.pointerType==='touch') swipe={id:event.pointerId,x:event.clientX,y:event.clientY};
+  });
+  stage.addEventListener('pointercancel',()=>{swipe=null;});
+  stage.addEventListener('pointerup',event=>{
+    if(!swipe || swipe.id!==event.pointerId) return;
+    const dx=event.clientX-swipe.x,dy=event.clientY-swipe.y;
+    swipe=null;
+    if(album.length>1 && Math.abs(dx)>48 && Math.abs(dx)>1.4*Math.abs(dy)) show(index+(dx<0?1:-1));
+  });
+  one('.viewer-close',dialog).addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',event=>{
+    if(event.target!==dialog) return;
+    const r=dialog.getBoundingClientRect();
+    if(event.clientX<r.left || event.clientX>r.right || event.clientY<r.top || event.clientY>r.bottom) dialog.close();
+  });
+  dialog.addEventListener('close',()=>{swipe=null;trigger?.focus({preventScroll:true});});
+}
+
+function setUpPointerLight() {
+  const enabled=window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+  const rooms=all('#main > section');
+  const cards=all('[data-card], .session, .hall-note, .form-wrap, .archive-stories article');
+  const channels=[
+    {key:'room',selector:'.pointer-room',active:'is-lit',vars:['--spot-x','--spot-y']},
+    {key:'frame',selector:'.photo-frame',active:'is-aimed',vars:['--picture-x','--picture-y','--rim-w','--rim-h']},
+    {key:'ink',selector:'h1,h2,h3,figcaption b,.show-time,.place-name',active:'ink-follow',vars:['--ink-x','--ink-y']},
+    {key:'card',selector:'.pointer-card',active:'is-warm',vars:['--card-x','--card-y']}
+  ];
+  let pending=0, point=null;
+  function switchElement(channel,next) {
+    if(channel.el===next) return;
+    if(channel.el) {
+      channel.el.classList.remove(channel.active);
+      channel.vars.forEach(name=>channel.el.style.removeProperty(name));
+    }
+    channel.el=next;
+    if(next) next.classList.add(channel.active);
+  }
+  function reset() {
+    cancelAnimationFrame(pending);pending=0;point=null;
+    channels.forEach(channel=>switchElement(channel,null));
+  }
+  function paint() {
+    pending=0;
+    if(!point) return;
+    for(const channel of channels) {
+      const el=point.target.closest(channel.selector);
+      switchElement(channel,el);
+      if(!el) continue;
+      const r=el.getBoundingClientRect();
+      const x=Math.max(0,Math.min(r.width,point.x-r.left));
+      const y=Math.max(0,Math.min(r.height,point.y-r.top));
+      let values;
+      if(channel.key==='frame') {
+        const fx=x/Math.max(1,r.width), fy=y/Math.max(1,r.height);
+        const dx=(fx*2-1)*Math.min(8,r.width*.022);
+        const dy=(fy*2-1)*Math.min(5,r.height*.014);
+        values=[dx.toFixed(2)+'px',dy.toFixed(2)+'px',(11+fx*24).toFixed(1)+'%',(12+fy*24).toFixed(1)+'%'];
+      } else values=[Math.round(x)+'px',Math.round(y)+'px'];
+      channel.vars.forEach((name,i)=>el.style.setProperty(name,values[i]));
+    }
+  }
+  function move(event) {
+    if(event.pointerType==='touch' || event.buttons || !event.target.closest('main')) {reset();return;}
+    point={x:event.clientX,y:event.clientY,target:event.target};
+    if(!pending) pending=requestAnimationFrame(paint);
+  }
+  const leave=event=>{if(!event.relatedTarget) reset();};
+  function configure() {
+    reset();
+    rooms.forEach(el=>el.classList.toggle('pointer-room',enabled.matches));
+    cards.forEach(el=>el.classList.toggle('pointer-card',enabled.matches));
+    const bind=enabled.matches?'addEventListener':'removeEventListener';
+    document[bind]('pointermove',move,{passive:true});
+    document[bind]('pointerdown',reset,{passive:true});
+    document[bind]('pointerout',leave,{passive:true});
+    window[bind]('scroll',reset,{passive:true});
+    window[bind]('blur',reset);
+  }
+  configure();enabled.addEventListener('change',configure);
 }
 setUpHeader();
+setUpSectionIndex();
+setUpPhotoViewer();
+setUpPointerLight();
 setUpMotion();
 setUpFinder();
 setUpForm();

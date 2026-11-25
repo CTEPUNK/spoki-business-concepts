@@ -58,14 +58,15 @@ async function visit(dir) {
     const html = old.replace(/<header class="site-header">[\s\S]*?<\/header>/,header)
       .replace(/<footer class="site-footer">[\s\S]*?<\/footer>/,footer)
       .replace(/assets\/ui\.svg(?:\?v=[\d.]+)?#/g,"assets/ui.svg?v=3#")
-      .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=5#")
+      .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=6#")
       .replace(/assets\/mark\.svg(?:\?v=[\d.]+)?"/g,'assets/mark.svg?v=3"')
       .replace(/(site\.js|app\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
       .replace(/rhythm\.js(?:\?v=[\d.]+)?"/g,'rhythm.js?v=5"')
-      .replace(/dance\.js(?:\?v=[\d.]+)?"/g,'dance.js?v=4"')
+      .replace(/dance\.js(?:\?v=[\d.]+)?"/g,'dance.js?v=6"')
       .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*(<link rel="stylesheet" href="[^"]*dance\.css(?:\?v=[\d.]+)?">))?/g,
         (_,sections,prefix,dance) => sections + (dance || '<link rel="stylesheet" href="'+prefix+'dance.css">'))
-      .replace(/\b(style|sections|dance)\.css(?:\?v=[\d.]+)?"/g,'$1.css?v=5"');
+      .replace(/\b(style|sections)\.css(?:\?v=[\d.]+)?"/g,'$1.css?v=5"')
+      .replace(/\bdance\.css(?:\?v=[\d.]+)?"/g,'dance.css?v=6"');
     if (old !== html) await writeFile(path,html);
   }
 }

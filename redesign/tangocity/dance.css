@@ -35,8 +35,8 @@
 .venue-change { margin-top:.55rem;color:var(--wine);font-size:1rem; }
 .lesson-walk { margin:clamp(1rem,2.2vw,2rem) 0 0; }
 .first-trail { position:static;display:block;width:100%;height:auto;margin:0;color:var(--wine); }
-.walk-guide { stroke:#c6aba0;stroke-width:1;stroke-dasharray:2 4; }
-.walk-line { stroke:#965249;stroke-width:1.65;stroke-dasharray:1; }
+.walk-guide { stroke:#c6aba0;stroke-width:.8;stroke-dasharray:2 4; }
+.walk-line { stroke:#965249;stroke-width:1.14;stroke-dasharray:1; }
 .lesson-walk figcaption,.motion-route figcaption { font:400 .8125rem/1.45 var(--sans);color:var(--route-caption,#76665c);text-align:right; }
 .lesson-walk figcaption { margin-top:.6rem; }
 .lesson-walk figcaption span { padding-inline:.18rem; }

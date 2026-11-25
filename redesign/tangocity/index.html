@@ -12,12 +12,12 @@
   <link rel="icon" type="image/svg+xml" href="./assets/mark.svg?v=3">
   <link rel="stylesheet" href="./assets/fonts/fonts.css">
   <link rel="stylesheet" href="./style.css?v=5">
-  <link rel="stylesheet" href="./sections.css?v=5"><link rel="stylesheet" href="./dance.css?v=5">
+  <link rel="stylesheet" href="./sections.css?v=5"><link rel="stylesheet" href="./dance.css?v=6">
   <script src="./site.js?v=3" defer></script>
   <script src="./schedule.js?v=2" defer></script>
   <script src="./school-calendar.js?v=3" defer></script>
   <script src="./app.js?v=3" defer></script>
-  <script src="./dance.js?v=4" defer></script>
+  <script src="./dance.js?v=6" defer></script>
   <script src="./rhythm.js?v=5" defer></script>
 </head>
 <body id="top">
@@ -78,7 +78,29 @@
         <div class="first-intro">
           <p class="kicker"><span class="kicker-rule"></span>Перед занятием</p>
           <h2 id="first-title">Первый <em>урок</em></h2>
-          <figure class="lesson-walk"><svg class="first-trail" viewBox="3 12 293 99" aria-hidden="true" fill="none"><path class="walk-guide" d="M18 94C43 95 65 80 89 60C117 36 143 17 161 27C185 41 164 62 135 76C103 93 71 96 75 80C78 60 117 35 149 45C174 52 190 76 215 68C240 61 259 38 280 27"/><path class="walk-line" pathLength="1" d="M18 94C43 95 65 80 89 60C117 36 143 17 161 27C185 41 164 62 135 76C103 93 71 96 75 80C78 60 117 35 149 45C174 52 190 76 215 68C240 61 259 38 280 27"/><g class="walk-history"></g><g class="walk-feet"></g></svg><figcaption>Очо <span>·</span> поворот на опорной ноге</figcaption></figure>
+          <figure class="lesson-walk">
+            <svg class="first-trail" viewBox="3 12 293 99" aria-hidden="true" fill="none">
+              <defs>
+                <radialGradient id="walk-fade">
+                  <stop stop-color="black" stop-opacity=".94"/>
+                  <stop offset=".52" stop-color="black" stop-opacity=".83"/>
+                  <stop offset="1" stop-color="black" stop-opacity="0"/>
+                </radialGradient>
+                <ellipse id="walk-step-field" cx="6.6" cy="12.5" rx="17" ry="26" fill="url(#walk-fade)"/>
+                <mask id="walk-route-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="300" height="120">
+                  <rect width="300" height="120" fill="white"/>
+                  <g class="walk-fields"></g>
+                </mask>
+              </defs>
+              <g mask="url(#walk-route-mask)" opacity=".66" stroke-linecap="round" stroke-linejoin="round">
+                <path class="walk-guide" d="M18 94C43 95 65 80 89 60C117 36 143 17 161 27C185 41 164 62 135 76C103 93 71 96 75 80C78 60 117 35 149 45C174 52 190 76 215 68C240 61 259 38 280 27"/>
+                <path class="walk-line" pathLength="1" d="M18 94C43 95 65 80 89 60C117 36 143 17 161 27C185 41 164 62 135 76C103 93 71 96 75 80C78 60 117 35 149 45C174 52 190 76 215 68C240 61 259 38 280 27"/>
+              </g>
+              <g class="walk-history"></g>
+              <g class="walk-feet"></g>
+            </svg>
+            <figcaption>Очо <span>·</span> поворот на опорной ноге</figcaption>
+          </figure>
         </div>
         <div class="faq">
           <details open><summary>Можно прийти без пары?<svg class="icon" aria-hidden="true"><use href="./assets/ui.svg?v=3#i-down"/></svg></summary><p>Да. Когда в группе становится больше ведущих или следующих, школа может приостановить запись без пары. Перед первым визитом уточните у преподавателя, есть ли место.</p></details>

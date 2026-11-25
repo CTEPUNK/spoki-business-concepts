@@ -1,119 +1,152 @@
 "use strict";
 
-// One clock drives the pendulum, the click track and the player's eight targets.
 (() => {
-  const stage=document.querySelector(".rhythm"), tap=byId("beat-tap"), stop=byId("beat-reset");
-  const sound=byId("beat-sound"), status=byId("beat-status"), readout=byId("metro-readout");
-  const meter=stage.querySelector(".meter-frame"), needle=stage.querySelector(".metro-arm");
-  const dance=stage.querySelector(".winning-dance");
-  const lamps=[...stage.querySelectorAll(".beat-score span")];
-  const interval=750, tolerance=170, countIn=4, total=lamps.length;
-  let mode="idle", start=0, frame=0, previousBeat=-1, lastTap=-Infinity, audioVersion=0;
-  let mistakes=0, soundOn=true, audio=null;
-  const hits=new Set(), activeClicks=new Set();
-  function reset() {
-    cancelAnimationFrame(frame); frame=0;
-    audioVersion++;
-    for (const osc of activeClicks) { try {osc.stop();} catch {} }
-    activeClicks.clear();
-    mode="idle"; hits.clear();mistakes=0;lastTap=-Infinity;previousBeat=-1;
-    lamps.forEach(lamp=>lamp.removeAttribute("class"));
-    meter.hidden=false;dance.hidden=true;stop.hidden=true;
-    stage.removeAttribute("data-ticking");
-    needle.style.transform="rotate(-20deg)";
-    tap.textContent="Запустить метроном"; status.textContent="80 ударов в минуту";readout.textContent="80 уд/мин";
-  }
-  async function scheduleAudio(starting=false) {
-    const version=++audioVersion;
-    if (!soundOn || mode!=="play") return;
-    try {
-      const Engine=window.AudioContext || window.webkitAudioContext;
-      if (!Engine) return;
-      audio ||= new Engine();
-      if (audio.state!=="running") await audio.resume();
-      if (version!==audioVersion || !soundOn || mode!=="play") return;
-      const now=performance.now();
-      if (starting && now>=start && previousBeat<1) start=now+160;
-      const origin=audio.currentTime+(start-now)/1000;
-      const first=Math.max(0,Math.ceil((now-start-30)/interval));
-      for(let n=first;n<countIn+total;n++) tick(Math.max(audio.currentTime,origin+n*interval/1000),n%4===0);
-    } catch { /* The pendulum and beat indicator continue when audio is unavailable. */ }
-  }
-  function tick(at,accent) {
-    const osc=audio.createOscillator(), gain=audio.createGain();
-    osc.type="sine";osc.frequency.value=accent?1340:925;
-    gain.gain.setValueAtTime(.0001,at);
-    gain.gain.exponentialRampToValueAtTime(.16,at+.002);
-    gain.gain.exponentialRampToValueAtTime(.0001,at+.055);
-    osc.connect(gain).connect(audio.destination);osc.start(at);osc.stop(at+.063);
-    activeClicks.add(osc);
-    osc.onended=()=>{activeClicks.delete(osc);osc.disconnect();gain.disconnect();};
-  }
-  function finish() {
-    const won=hits.size>=6 && mistakes<=3;
-    mode="done";stage.removeAttribute("data-ticking");
-    tap.textContent="Сыграть ещё раз";stop.hidden=true;
-    const feedback=mistakes>3 ? "Были лишние нажатия. Нажимайте один раз на долю." : "Попробуйте ещё раз и нажимайте вместе с ударами.";
-    status.textContent=won ? hits.size+" из 8 в такт. Отличный ритм!" : hits.size+" из 8 в такт. "+feedback;
-    readout.textContent=won?"В такт":"80 уд/мин";
-    if (won) {
-      meter.hidden=true;dance.hidden=false;
+  const game = document.querySelector(".step-game");
+  const action = document.getElementById("step-action");
+  const round = document.getElementById("step-round");
+  const status = document.getElementById("step-status");
+  const board = game.querySelector(".step-board");
+  const progress = game.querySelector(".step-progress");
+  const pads = [...game.querySelectorAll(".step-pad")];
+  const firstLength = 3;
+  const lastLength = 5;
+  const pattern = [];
+  let phase = "idle";
+  let position = 0;
+  let cueTimer;
+  let feedbackTimer;
+
+  function clearLights() {
+    clearTimeout(feedbackTimer);
+    for (const pad of pads) {
+      pad.removeAttribute("data-lit");
+      pad.removeAttribute("data-missed");
     }
   }
-  function draw(now) {
-    frame=0;
-    if (mode==="play") {
-      const beat=(now-start)/interval;
-      const slot=Math.floor(beat);
-      const phase=beat-slot;
-      if (!reduceMotion.matches) needle.style.transform="rotate("+(-22*Math.cos(Math.PI*Math.max(0,beat))).toFixed(2)+"deg)";
-      stage.toggleAttribute("data-ticking",beat>=0 && phase<.17);
-      if (slot!==previousBeat && slot>=0 && slot<countIn+total) {
-        previousBeat=slot;
-        readout.textContent=slot<countIn?"Вступление · "+(slot+1):"Доля "+(slot-countIn+1)+" из 8";
-        if (slot===countIn) status.textContent="Ваш ход. Нажимайте на каждую долю.";
-      }
-      for(let n=0;n<total;n++) {
-        if (!hits.has(n) && now>start+(n+countIn)*interval+tolerance) lamps[n].classList.add("miss");
-      }
-      if (now>start+(countIn+total-1)*interval+tolerance+70) finish();
+
+  function setPhase(next, buttonLabel) {
+    phase = next;
+    game.dataset.phase = next;
+    const canStart = ["idle", "input", "paused", "won"].includes(next);
+    action.textContent = buttonLabel;
+    action.setAttribute("aria-disabled", String(!canStart));
+    for (const pad of pads) {
+      pad.setAttribute("aria-disabled", String(next !== "input"));
+      pad.tabIndex = next === "input" ? 0 : -1;
     }
-    if (mode==="play") frame=requestAnimationFrame(draw);
   }
-  function begin() {
-    reset();mode="play";start=performance.now()+240;scheduleAudio(true);
-    tap.textContent="Отбить долю";stop.hidden=false;status.textContent="Четыре удара для вступления";
-    frame=requestAnimationFrame(draw);
+
+  function addStep() {
+    const choices = pads.map((_, index) => index).filter(index => index !== pattern.at(-1));
+    pattern.push(choices[Math.floor(Math.random() * choices.length)]);
   }
-  tap.addEventListener("click",()=>{
-    if (mode!=="play") { begin();return; }
-    const now=performance.now();
-    const t=(now-start)/interval-countIn;
-    if (t<-.5 || now-lastTap<105) return;
-    lastTap=now;
-    const n=Math.round(t);
-    if(n<0 || n>=total) return;
-    const offset=(t-n)*interval;
-    if (Math.abs(offset)<=tolerance && !hits.has(n)) {
-      hits.add(n);lamps[n].className="hit";status.textContent="В такт · "+hits.size+" из 8";
+
+  function resetDots(length) {
+    progress.replaceChildren(...Array.from({ length }, () => document.createElement("span")));
+  }
+
+  function invitePlayer() {
+    setPhase("input", "Показать ещё раз");
+    status.textContent = "Ваш ход. Повторите шаги по порядку.";
+    const spokenPattern = document.createElement("span");
+    spokenPattern.className = "sr-only";
+    spokenPattern.textContent = " Рисунок: " + pattern.map(index => index + 1).join(", ") + ".";
+    status.append(spokenPattern);
+  }
+
+  function showPattern() {
+    clearTimeout(cueTimer);
+    clearLights();
+    position = 0;
+    resetDots(pattern.length);
+    round.textContent = "Раунд " + (pattern.length - firstLength + 1) + " из 3";
+    setPhase("show", "Идёт показ");
+    status.textContent = "Смотрите на следы.";
+    let nextCue = 0;
+
+    function lightCue() {
+      const pad = pads[pattern[nextCue]];
+      pad.setAttribute("data-lit", "");
+      nextCue++;
+      cueTimer = setTimeout(() => {
+        pad.removeAttribute("data-lit");
+        cueTimer = setTimeout(nextCue === pattern.length ? invitePlayer : lightCue, 240);
+      }, 650);
+    }
+    cueTimer = setTimeout(lightCue, 450);
+  }
+
+  function choose(index) {
+    if (phase !== "input") return;
+    clearLights();
+    if (index !== pattern[position]) {
+      pads[index].setAttribute("data-missed", "");
+      setPhase("retry", "Повтор рисунка");
+      status.textContent = "Здесь был другой след. Посмотрите тот же рисунок ещё раз.";
+      cueTimer = setTimeout(showPattern, 1150);
+      return;
+    }
+
+    pads[index].setAttribute("data-lit", "");
+    feedbackTimer = setTimeout(clearLights, 260);
+    progress.children[position].classList.add("matched");
+    position++;
+    if (position < pattern.length) {
+      status.textContent = "Верно. Следующий шаг — " + (position + 1) + " из " + pattern.length + ".";
+    } else if (pattern.length === lastLength) {
+      setPhase("won", "Сыграть ещё раз");
+      status.textContent = "Вы запомнили все три рисунка. Пять шагов подряд!";
+      if (board.contains(document.activeElement) && document.activeElement.matches(":focus-visible")) {
+        action.focus({ preventScroll: true });
+      }
     } else {
-      mistakes++;status.textContent=hits.has(n)?"Один шаг на долю":offset<0?"Чуть рано":"Чуть поздно";
+      addStep();
+      setPhase("between", "Следующий раунд");
+      status.textContent = "Точно! Теперь добавим один шаг.";
+      cueTimer = setTimeout(showPattern, 900);
+    }
+  }
+
+  action.addEventListener("click", () => {
+    if (action.getAttribute("aria-disabled") === "true") return;
+    if (phase === "idle" || phase === "won") {
+      pattern.length = 0;
+      while (pattern.length < firstLength) addStep();
+    }
+    const bounds = board.getBoundingClientRect();
+    const headerBottom = document.querySelector(".site-header").getBoundingClientRect().bottom;
+    if (bounds.top < headerBottom || bounds.bottom > window.innerHeight) {
+      board.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+    showPattern();
+  });
+  pads.forEach((pad, index) => pad.addEventListener("click", () => choose(index)));
+  game.addEventListener("keydown", event => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.repeat && [" ", "Enter", "1", "2", "3", "4"].includes(event.key)) {
+      event.preventDefault();
+      return;
+    }
+    if (phase === "input" && /^[1-4]$/.test(event.key)) {
+      event.preventDefault();
+      choose(Number(event.key) - 1);
     }
   });
-  tap.addEventListener("keydown",e=>{if(e.repeat && (e.key===" " || e.key==="Enter")) e.preventDefault();});
-  stop.addEventListener("click",()=>{reset();tap.focus();});
-  sound.addEventListener("click",()=>{
-    soundOn=!soundOn;sound.setAttribute("aria-pressed",String(soundOn));
-    if (soundOn) scheduleAudio();
-    else {
-      audioVersion++;
-      for(const osc of activeClicks) {try{osc.stop();}catch{}}
-    }
-  });
-  function pauseIfPlaying() {if(mode==="play") reset();}
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)pauseIfPlaying();});
-  window.addEventListener("pagehide",pauseIfPlaying);
-  new IntersectionObserver(([entry])=>{if(!entry.isIntersecting)pauseIfPlaying();}).observe(stage);
-  byId("beat-controls").hidden=false;
-  reset();
+
+  function pause() {
+    if (phase === "idle" || phase === "won" || phase === "paused") return;
+    clearTimeout(cueTimer);
+    clearLights();
+    setPhase("paused", "Продолжить игру");
+    status.textContent = "Игра на паузе. Продолжите с этого рисунка.";
+  }
+  document.addEventListener("visibilitychange", () => { if (document.hidden) pause(); });
+  window.addEventListener("pagehide", pause);
+  new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) pause();
+  }).observe(board);
+
+  resetDots(firstLength);
+  setPhase("idle", "Начать игру");
+  game.hidden = false;
 })();

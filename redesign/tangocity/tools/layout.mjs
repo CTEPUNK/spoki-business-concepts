@@ -28,7 +28,8 @@ function chrome(pagePath) {
   const href = path => path === "#schedule" && depth ? base + "shkola/raspisanie/#schedule" : !depth && path.startsWith("#") ? path : base + path;
   const link = ([label,path]) => '<a href="' + href(path) + '"' + (path === pagePath ? ' aria-current="page"' : '') + '>' + label + '</a>';
   const ico = (id, cls = "icon") => '<svg class="' + cls + '" aria-hidden="true"><use href="' + base + 'assets/ui.svg#i-' + id + '"/></svg>';
-  const brand = '<a class="brand" href="' + base + '" aria-label="TangoCity, главная">' + ico("mark") + '<span>Tango<i>City</i></span></a>';
+  const brand = '<a class="brand" href="' + base + '" aria-label="TangoCity, главная"><img src="' +
+    base + 'assets/tangocity-logo.svg" width="189" height="40" alt=""></a>';
   const groups = sections.map(([name,links]) => '<div class="nav-group"><p>' + name + '</p>' + links.map(link).join("") + '</div>').join("\n");
   const contactPath = !depth ? "#contacts" : pagePath === "kontakty/" ? "#zapis" : href("kontakty/");
   const header = '<header class="site-header"><div class="wrap header-inner">' + brand +
@@ -36,7 +37,7 @@ function chrome(pagePath) {
     '<details class="site-menu"><summary aria-label="Меню разделов">' + ico("menu") + '<span>Меню</span></summary>' +
     '<nav class="site-menu-panel" aria-label="Все разделы"><div class="wrap menu-grid">' + groups +
     '<div class="nav-group"><p>Связь</p>' + link(["Контакты и адрес","kontakty/"]) + link(["Первый урок","#first-lesson"]) +
-    link(["Практика ритма","#rhythm"]) + link(["Все страницы","karta-sayta/"]) + '</div></div></nav></details>' +
+    link(["След в след","#rhythm"]) + link(["Все страницы","karta-sayta/"]) + '</div></div></nav></details>' +
     '<a href="' + contactPath + '" class="header-contact"><span>Контакты ' + ico("arrow","arrow") +
     '</span></a></div></div><nav class="mobile-primary" aria-label="Быстрые переходы">' + primary.slice(0,4).map(link).join("") + '</nav></header>';
   const footer = '<footer class="site-footer"><div class="wrap footer-map"><div class="footer-identity">' + brand +
@@ -57,12 +58,14 @@ async function visit(dir) {
     const html = old.replace(/<header class="site-header">[\s\S]*?<\/header>/,header)
       .replace(/<footer class="site-footer">[\s\S]*?<\/footer>/,footer)
       .replace(/assets\/ui\.svg(?:\?v=[\d.]+)?#/g,"assets/ui.svg?v=3#")
-      .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=3#")
+      .replace(/assets\/gestures\.svg(?:\?v=[\d.]+)?#/g,"assets/gestures.svg?v=5#")
       .replace(/assets\/mark\.svg(?:\?v=[\d.]+)?"/g,'assets/mark.svg?v=3"')
       .replace(/(site\.js|app\.js|school-calendar\.js|enrollment\.js)(?:\?v=[\d.]+)?"/g,'$1?v=3"')
-      .replace(/(dance|rhythm)\.js(?:\?v=[\d.]+)?"/g,'$1.js?v=4"')
+      .replace(/rhythm\.js(?:\?v=[\d.]+)?"/g,'rhythm.js?v=5"')
+      .replace(/dance\.js(?:\?v=[\d.]+)?"/g,'dance.js?v=4"')
       .replace(/(<link rel="stylesheet" href="([^"]*?)sections\.css(?:\?v=[\d.]+)?">)(?:\s*(<link rel="stylesheet" href="[^"]*dance\.css(?:\?v=[\d.]+)?">))?/g,
-        (_,sections,prefix,dance) => sections + (dance || '<link rel="stylesheet" href="'+prefix+'dance.css">'));
+        (_,sections,prefix,dance) => sections + (dance || '<link rel="stylesheet" href="'+prefix+'dance.css">'))
+      .replace(/\b(style|sections|dance)\.css(?:\?v=[\d.]+)?"/g,'$1.css?v=5"');
     if (old !== html) await writeFile(path,html);
   }
 }

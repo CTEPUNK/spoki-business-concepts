@@ -7,7 +7,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 function setUpHeader() {
   const menu = one('#main-nav');
   const toggle = one('.menu-toggle');
-  const mobile = window.matchMedia('(max-width: 860px)');
+  const mobile = window.matchMedia('(max-width: 1023px)');
   function setOpen(open) {
     menu.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));

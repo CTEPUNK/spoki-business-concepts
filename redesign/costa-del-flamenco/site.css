@@ -371,7 +371,7 @@ details p+ .ink-link {margin-bottom:14px}
  #section-links a {padding:11px 1px;border-top:1px solid #dbc8b6}
  #section-links a::after {bottom:0}
 }
-@media(min-width:701px) and (max-width:860px) {
+@media(min-width:701px) and (max-width:1023px) {
  .mast .brand img {width:177px}
  .mast nav {position:absolute;left:0;right:0;top:100%;display:none;background:#231721;border-bottom:1px solid #765768;padding:8px 5.5vw 14px;max-height:calc(100svh - var(--head));overflow:auto}
  .mast nav.is-open {display:flex;align-items:stretch;flex-direction:column;gap:0}

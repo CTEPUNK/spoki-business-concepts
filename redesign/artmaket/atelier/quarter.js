@@ -14,13 +14,31 @@
   function query(state) {
     return new URLSearchParams({ plots: state.tiles.join(''), light: state.light });
   }
-  function replaceAddress(address) {
+  function replaceAddress(address, entry = history.state) {
     // Browsers may restrict history changes when the demo is opened from disk.
     try {
-      history.replaceState(null, '', address);
+      if (address === undefined) history.replaceState(entry, '');
+      else history.replaceState(entry, '', address);
     } catch (error) {
       if (error.name !== 'SecurityError') throw error;
     }
+  }
+  function updateAddress(state, hash = location.hash, clearDimensions = false) {
+    const url = new URL(location.href);
+    if (state) {
+      for (const [key, value] of query(state)) {
+        if (url.searchParams.get(key) !== value || url.searchParams.getAll(key).length > 1)
+          url.searchParams.set(key, value);
+      }
+    } else {
+      const keys = ['plots', 'light'];
+      if (clearDimensions) keys.push('object', 'length', 'width', 'scale');
+      for (const key of keys) {
+        if (url.searchParams.has(key)) url.searchParams.delete(key);
+      }
+    }
+    url.hash = hash;
+    if (url.href !== location.href) replaceAddress(url.href);
   }
   function describe(state) {
     const layout = plots.map(
@@ -146,7 +164,8 @@
   const editor = byId('quarter-editor');
   if (editor) {
     const scene = byId('quarter-model');
-    const state = readQuarter() || { tiles: ['p', 'g', 's', 'x'], light: 'day' };
+    let saved = readQuarter();
+    const state = saved || { tiles: ['p', 'g', 's', 'x'], light: 'day' };
     let active = state.tiles.includes('x') ? state.tiles.indexOf('x') : 0;
     function selectPlot(code) {
       active = Number(code);
@@ -159,6 +178,7 @@
       (code) => {
         state.tiles[active] = code;
         render(active);
+        if (saved) updateAddress(state);
       },
     );
     const tray = byId('piece-options');
@@ -174,10 +194,12 @@
       active = index;
       state.tiles[index] = code;
       render(index);
+      if (saved) updateAddress(state);
     });
     const illuminate = options(byId('light-options'), Object.entries(lights), (code) => {
       state.light = code;
       render();
+      if (saved) updateAddress(state);
     });
     scene.addEventListener('click', (event) => {
       const tile = event.target.closest('[data-plot]');
@@ -203,18 +225,42 @@
       const apply = byId('quarter-apply');
       apply.hidden = filled === 0;
       apply.href = 'price.html?' + query(state) + '#request';
-      // Keep a previously opened composition link in sync with subsequent edits.
-      if (location.search) replaceAddress('?' + query(state) + location.hash);
     }
     byId('quarter-reset').addEventListener('click', () => {
       state.tiles.fill('x');
       state.light = 'day';
       active = 0;
-      replaceAddress(location.pathname + '#quarter-studio');
+      saved = null;
+      updateAddress(null, '#quarter-studio');
       render();
     });
     render();
     editor.hidden = false;
+    const legacyHash = location.hash;
+    if (['#scale-lab', '#drawing'].includes(legacyHash)) {
+      window.addEventListener(
+        'pageshow',
+        (event) => {
+          if (
+            event.persisted ||
+            performance.getEntriesByType('navigation')[0]?.type === 'back_forward'
+          )
+            return;
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              if (
+                location.hash !== legacyHash ||
+                history.state?.artmaketQuarterAnchor === legacyHash
+              )
+                return;
+              byId('quarter-studio').scrollIntoView({ block: 'start', behavior: 'instant' });
+              replaceAddress(undefined, { ...history.state, artmaketQuarterAnchor: legacyHash });
+            }),
+          );
+        },
+        { once: true },
+      );
+    }
   }
   const form = byId('request-form');
   if (!form) return;
@@ -257,7 +303,7 @@
       const activate = options(row, Object.entries(choices), (code) => {
         save(code);
         update();
-        replaceAddress('?' + query(state) + '#request');
+        updateAddress(state);
       });
       mark.push(() => activate(current()));
     }
@@ -334,6 +380,6 @@
     size.required = true;
     byId('wishes').required = true;
     size.placeholder = 'Например: 1:200 или 80 × 60 см';
-    replaceAddress(location.pathname + '#request');
+    updateAddress(null, '#request', true);
   });
 })();

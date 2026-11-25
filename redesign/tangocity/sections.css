@@ -145,9 +145,6 @@
 }
 @media (max-width:25rem) {
   .header-inner { width:calc(100% - 1.25rem); gap:.3rem; }
-  .header-inner .brand { gap:.26rem; }
-  .header-inner .brand span { font-size:1.5rem; }
-  .header-inner .brand svg { width:1.55rem; height:1.55rem; }
   .header-actions { gap:.22rem; }
   .header-contact { padding-inline:.45rem; font-size:.94rem; }
   .header-contact span { gap:.28rem; }

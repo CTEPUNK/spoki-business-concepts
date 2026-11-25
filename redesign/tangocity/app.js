@@ -1,40 +1,20 @@
 "use strict";
 
 const byId = (id) => document.getElementById(id);
-const dayFormat = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" });
-const weekFormat = new Intl.DateTimeFormat("ru-RU", { weekday: "long", timeZone: "UTC" });
-const priceFormat = new Intl.NumberFormat("ru-RU");
-let allLessons = tangoSchedule.days.flatMap(([date, ids]) =>
-  ids.map(id => ({ group: tangoSchedule.groups[id], date }))
-);
+const spriteUrl = (document.documentElement.dataset.base || "./") + "assets/ui.svg#";
+let allLessons = publishedLessons();
 let schedulePeriod = tangoSchedule.period;
 const pageSize = 3;
-let selectedLevel = "zero";
+const query = new URLSearchParams(location.search);
+let selectedLevel = Object.hasOwn(tangoSchedule.levels, query.get("level")) ? query.get("level") : "zero";
+let selectedGroup = Object.hasOwn(tangoSchedule.groups, query.get("group")) ? query.get("group") : null;
+if (selectedGroup) selectedLevel = tangoSchedule.groups[selectedGroup].level;
 let shownCount = pageSize;
 let selectedLesson;
 let bookingTrigger;
 
 function icon(name, className = "icon") {
-  return '<svg class="' + className + '" aria-hidden="true"><use href="#' + name + '"/></svg>';
-}
-
-function timeRange(group) {
-  return group.start + "–" + group.end;
-}
-
-function feeUnit(group) {
-  return group.units === 2 ? "за 2 урока" : "за 1 урок";
-}
-
-function calendarParts(lesson) {
-  if (!lesson.date) return { day: "Регулярная группа", date: lesson.group.weekly };
-  const utcDate = new Date(lesson.date + "T12:00:00Z");
-  const weekday = weekFormat.format(utcDate);
-  return { day: weekday.charAt(0).toUpperCase() + weekday.slice(1), date: dayFormat.format(utcDate) };
-}
-
-function startsAt(lesson) {
-  return Date.parse(lesson.date + "T" + lesson.group.start + ":00+03:00");
+  return '<svg class="' + className + '" aria-hidden="true"><use href="' + spriteUrl + name + '"/></svg>';
 }
 
 function cardArt(index) {
@@ -45,7 +25,7 @@ function cardArt(index) {
   ][index % 3];
   return '<svg viewBox="0 0 54 56" class="card-art" aria-hidden="true"><path class="trace" d="' + drawing.line +
     '"/><g transform="translate(' + drawing.x + ' ' + drawing.y + ') rotate(' + drawing.angle +
-    ')"><use href="#sole" x="-5" y="-1" width="7" height="15"/><use href="#sole" x="2" y="-12" width="7" height="15"/></g></svg>';
+    ')"><use href="' + spriteUrl + 'sole" x="-5" y="-1" width="7" height="15"/><use href="' + spriteUrl + 'sole" x="2" y="-12" width="7" height="15"/></g></svg>';
 }
 
 function makeCard(lesson, index) {
@@ -71,21 +51,27 @@ function renderSchedule(focusIndex) {
   const now = Date.now();
   const nextFirst = allLessons.find(lesson => lesson.group.level === "zero" && startsAt(lesson) > now);
   const hero = byId("hero-next");
-  if (nextFirst) {
+  if (hero && nextFirst) {
     const { group } = nextFirst;
     hero.innerHTML = 'Ближайшее занятие с нуля<strong><span>' + calendarParts(nextFirst).date + ' · ' + group.start +
       '</span><span class="hero-price">' + (group.fee === null ? "Цену уточнит школа" : priceFormat.format(group.fee) + ' ₽ ' + feeUnit(group)) + '</span></strong>';
-  } else {
+  } else if (hero) {
     hero.textContent = "Группы для первого урока и для тех, кто уже танцует.";
   }
   const level = tangoSchedule.levels[selectedLevel];
-  let lessons = allLessons.filter(lesson => lesson.group.level === selectedLevel && startsAt(lesson) > now);
+  const scopedTitle = selectedGroup ? tangoSchedule.groups[selectedGroup].title : "";
+  const matchesSelection = group => group.level === selectedLevel && (!scopedTitle || group.title === scopedTitle);
+  let lessons = allLessons.filter(lesson => matchesSelection(lesson.group) && startsAt(lesson) > now);
   const dated = lessons.length > 0;
   if (!dated) {
-    lessons = Object.values(tangoSchedule.groups).filter(group => group.level === selectedLevel).map(group => ({ group, date: null }));
+    lessons = Object.values(tangoSchedule.groups).filter(matchesSelection).map(group => ({ group, date: null }));
   }
   byId("date-range-text").textContent = dated ? schedulePeriod : "Ближайшую дату уточняет школа";
   byId("level-description").textContent = level.description + (dated ? "" : " Ниже — обычные дни занятий. Уточните дату, время и цену у преподавателя.");
+  const scope = byId("group-scope");
+  scope.hidden = !selectedGroup;
+  scope.querySelector("span").textContent = scopedTitle;
+  document.querySelectorAll("[data-level]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.level === selectedLevel)));
   const shown = lessons.slice(0, shownCount);
   const list = byId("class-list");
   list.replaceChildren(...shown.map(makeCard));
@@ -97,13 +83,20 @@ function renderSchedule(focusIndex) {
   if (typeof focusIndex === "number") list.children[focusIndex]?.querySelector("h3").focus();
 }
 
-document.querySelectorAll("[data-level]").forEach(button => {
-  button.addEventListener("click", () => {
-    selectedLevel = button.dataset.level;
-    shownCount = pageSize;
-    document.querySelectorAll("[data-level]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
-    renderSchedule();
-  });
+function selectLevel(level) {
+  selectedLevel = level;
+  selectedGroup = null;
+  shownCount = pageSize;
+  const url = new URL(location.href);
+  url.searchParams.set("level",level);
+  url.searchParams.delete("group");
+  history.replaceState(null,"",url);
+  renderSchedule();
+}
+document.querySelectorAll("[data-level]").forEach(button => button.addEventListener("click", () => selectLevel(button.dataset.level)));
+byId("clear-group").addEventListener("click", () => {
+  selectLevel(selectedLevel);
+  document.querySelector('[data-level][aria-pressed="true"]').focus();
 });
 byId("show-more").addEventListener("click", () => {
   const firstNew = shownCount;
@@ -231,103 +224,3 @@ syncWithSchool();
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden && !booking.open) renderSchedule();
 });
-
-// The marked walking phrase grows a pair of prints on each beat.
-const steps = [[42,174,54],[100,120,58],[172,110,117],[221,160,132],[275,167,8],[263,100,17],[339,72,101],[469,89,36]];
-byId("floor-steps").innerHTML = steps.map(([x,y,angle]) =>
-  '<g class="floor-step" transform="translate(' + x + ' ' + y + ')"><circle r="3"/><g class="sole-pair" transform="rotate(' + angle +
-  ')"><use href="#sole" x="-13" y="-16" width="9" height="20"/><use href="#sole" x="4" y="-26" width="9" height="20"/></g></g>'
-).join("");
-const stepMarks = [...document.querySelectorAll(".floor-step")];
-const beats = [];
-const tap = byId("beat-tap");
-function resetRhythm() {
-  beats.length = 0;
-  stepMarks.forEach(mark => mark.classList.remove("active","just-added"));
-  byId("beat-status").textContent = "0 из 8 долей";
-  tap.querySelector("span").textContent = "Отбить долю";
-  byId("beat-reset").hidden = true;
-}
-tap.addEventListener("click", () => {
-  if (beats.length === steps.length) {
-    resetRhythm();
-    return;
-  }
-  const mark = stepMarks[beats.length];
-  beats.push(performance.now());
-  mark.classList.add("active","just-added");
-  byId("beat-reset").hidden = false;
-  if (beats.length < steps.length) {
-    byId("beat-status").textContent = beats.length + " из 8 долей";
-    return;
-  }
-  const tempo = Math.round(60000 * (beats.length - 1) / Math.max(1, beats[beats.length - 1] - beats[0]));
-  byId("beat-status").textContent = "8 из 8. Рисунок готов!" + (tempo >= 35 && tempo <= 260 ? " Ваш темп — " + tempo + " уд/мин." : "");
-  tap.querySelector("span").textContent = "Повторить";
-  byId("beat-reset").hidden = true;
-});
-byId("beat-reset").addEventListener("click", () => { resetRhythm(); tap.focus(); });
-byId("beat-controls").hidden = false;
-
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
-const scenes = [...document.querySelectorAll(".scene")];
-let pointerFrame = 0;
-let currentTarget;
-let mouseX = 0;
-let mouseY = 0;
-function moveDecoration(target, x, y) {
-  const smallX = (x * 5).toFixed(2) + "px";
-  const smallY = (y * 4).toFixed(2) + "px";
-  target.style.setProperty("--px", (x * 9).toFixed(2) + "px");
-  target.style.setProperty("--py", smallY);
-  target.style.setProperty("--ax", smallX);
-  target.style.setProperty("--ay", smallY);
-  target.style.setProperty("--floor-x", smallX);
-  target.style.setProperty("--floor-y", smallY);
-  target.style.setProperty("--tilt", (x * .65).toFixed(2) + "deg");
-  target.style.setProperty("--mx", (x * 3).toFixed(2) + "px");
-  target.style.setProperty("--my", (y * 2).toFixed(2) + "px");
-}
-document.addEventListener("pointermove", event => {
-  if (reduceMotion.matches || !finePointer.matches || event.pointerType === "touch") return;
-  const target = event.target.closest(".class-card, .header-contact, .scene");
-  if (target !== currentTarget) {
-    if (currentTarget) moveDecoration(currentTarget, 0, 0);
-    currentTarget = target;
-  }
-  if (!target) return;
-  mouseX = event.clientX;
-  mouseY = event.clientY;
-  if (pointerFrame) return;
-  pointerFrame = requestAnimationFrame(() => {
-    pointerFrame = 0;
-    if (!currentTarget) return;
-    const bounds = currentTarget.getBoundingClientRect();
-    moveDecoration(currentTarget, (mouseX - bounds.left) / bounds.width * 2 - 1, (mouseY - bounds.top) / bounds.height * 2 - 1);
-  });
-}, { passive: true });
-document.addEventListener("pointerout", event => {
-  if (!event.relatedTarget && currentTarget) {
-    moveDecoration(currentTarget, 0, 0);
-    currentTarget = null;
-  }
-});
-let scrollFrame = 0;
-function drawOnScroll() {
-  scrollFrame = 0;
-  if (reduceMotion.matches) return;
-  const height = window.innerHeight;
-  for (const scene of scenes) {
-    const rect = scene.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > height) continue;
-    const travel = Math.max(0, Math.min(1, (height - rect.top) / (height * .57 + rect.height * .32)));
-    scene.style.setProperty("--trail-gap", (1 - travel).toFixed(3));
-    if (scene.classList.contains("hero")) scene.style.setProperty("--scroll-x", Math.min(18, Math.max(0,-rect.top) * .075).toFixed(2) + "px");
-  }
-}
-function scheduleDrawing() { if (!scrollFrame) scrollFrame = requestAnimationFrame(drawOnScroll); }
-window.addEventListener("scroll", scheduleDrawing, { passive: true });
-window.addEventListener("resize", scheduleDrawing, { passive: true });
-reduceMotion.addEventListener("change", scheduleDrawing);
-scheduleDrawing();

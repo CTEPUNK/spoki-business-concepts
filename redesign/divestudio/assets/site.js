@@ -300,10 +300,12 @@ function wireForm(form, mode) {
           : 'в выходной день';
       const name = program.value === 'other' && topic.value.trim() ? topic.value.trim() : selected;
       const lines = [
-        'Здравствуйте! Хочу согласовать занятие или задать вопрос.',
+        program.value === 'gift' || program.value === 'other'
+          ? 'Здравствуйте! У меня вопрос для студии.'
+          : 'Здравствуйте! Хочу согласовать время занятия.',
         'Программа: ' + name + '.',
         'Число гостей: ' + guests.value + '.',
-        'Удобно: ' + timing + '.',
+        'Удобно: ' + timing.replace(/\.$/u, '') + '.',
       ];
       if (quote.total !== null) lines.push('Стоимость по прайсу: ' + quote.value + '.');
       if (quote.discount) lines.push('Оплачиваем и проходим программу одновременно, учитываем скидку 10%.');

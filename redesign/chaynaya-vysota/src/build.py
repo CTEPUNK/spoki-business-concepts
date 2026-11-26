@@ -449,7 +449,7 @@ def choose(label="Выбрать билет"):
 
 def hero():
     live = f"""<div data-if="live">{status("Ближайшая дегустация · № 67")}<h1>Три стиля<br>Тегуаньинь<br><em>и три Я Бао</em></h1>{event_facts()}<p class="hero-desc">{EVENT_TEXT}</p>{links(choose(),a('О встрече','schedule/67/'))}</div>"""
-    wait = f"""<div data-if="waiting">{tiny('Следующая дата пока не объявлена')}<h1>72 чайных<br>отражения<br><em>Сунь Укуна</em></h1><p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p><p class="wait-rates" data-before-expiry>Одно посещение · 2 600 ₽ за одного или 4 600 ₽ за двоих. Дату согласуют при активации.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
+    wait = f"""<div data-if="waiting">{tiny('Следующая дата пока не объявлена')}<h1>72 чайных<br>отражения<br><em>Сунь Укуна</em></h1><p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p><p class="wait-rates" data-before-expiry>Одно посещение · 2&nbsp;600&nbsp;₽ за одного или 4&nbsp;600&nbsp;₽ за двоих. Дату согласуют при активации.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
     return f"""<section class="hero"><div class="hero-copy">{live}{wait}</div><figure class="hero-figure"><div class="poster reactive">{art()}</div><figcaption>Стекло и янтарный настой</figcaption></figure></section>"""
 
 

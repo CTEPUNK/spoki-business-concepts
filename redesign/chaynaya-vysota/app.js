@@ -99,29 +99,174 @@
         const rx = (e.clientX - box.left) / box.width - .5;
         const ry = (e.clientY - box.top) / box.height - .5;
         const magnetic = node.classList.contains('mag');
-        node.style.setProperty(magnetic ? '--mx' : '--shiftX',(rx * (magnetic ? 8 : 6)).toFixed(2)+'px');
-        node.style.setProperty(magnetic ? '--my' : '--shiftY',(ry * (magnetic ? 7 : 4)).toFixed(2)+'px');
+        node.style.setProperty(magnetic ? '--mx' : '--shiftX',magnetic ? rx * 8 + 'px' : rx * 1.4 + '%');
+        node.style.setProperty(magnetic ? '--my' : '--shiftY',magnetic ? ry * 7 + 'px' : ry + '%');
       }, {passive:true});
       node.addEventListener('pointerleave', () => clear(node));
     });
+    motion.addEventListener('change', () => areas.forEach(clear));
+  }
+
+  function fitHeroTitles() {
+    const titles = document.querySelectorAll('.hero-title');
+    if (!titles.length || !window.ResizeObserver) return;
+    const pen = document.createElement('canvas').getContext('2d');
+    if (!pen || !('letterSpacing' in pen)) return;
+    function fit(title) {
+      const width = title.getBoundingClientRect().width;
+      if (!width) return;
+      for (const line of title.children) {
+        const style = getComputedStyle(line);
+        pen.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        pen.textRendering = style.textRendering;
+        pen.letterSpacing = '0px';
+        const text = line.textContent;
+        const ink = pen.measureText(text);
+        const tracking = (width - ink.actualBoundingBoxLeft - ink.actualBoundingBoxRight) / (text.length - 1);
+        line.style.letterSpacing = tracking + 'px';
+        line.style.textIndent = ink.actualBoundingBoxLeft + 'px';
+      }
+    }
+    const resize = new ResizeObserver(entries => entries.forEach(entry => fit(entry.target)));
+    titles.forEach(title => resize.observe(title));
+    document.fonts.ready.then(() => titles.forEach(fit));
+  }
+
+  function setupTeaPour() {
     const poster = document.querySelector('.poster');
-    const liquid = poster?.querySelector('.liquid');
-    let queued = false;
-    function paint() {
-      queued = false;
-      if (!liquid) return;
-      const box = poster.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, (innerHeight - box.top) / (innerHeight + box.height * .3)));
-      const y = motion.matches ? 212 : 268 - progress * 79;
-      liquid.setAttribute('transform','translate(0 '+y.toFixed(2)+')');
+    if (!poster) return;
+    const svg = poster.querySelector('.cup-art');
+    const part = name => svg.querySelector('[data-' + name + ']');
+    const liquid = part('liquid'), body = part('tea-body'), top = part('tea-top');
+    const stream = part('stream'), highlight = part('stream-light'), ripple = part('ripple'), pot = part('pot');
+    const button = document.querySelector('[data-pour]');
+    const status = document.querySelector('[data-pour-status]');
+    const center = 312, rim = 248, halfWidth = 155;
+    let level = 0, source = '', tip = {x:318, y:145};
+    let frame = 0, lastTime = 0, previousScroll = window.scrollY;
+    let pointer = null, scrollPointer = null, touchStart = null;
+
+    function paint(time = 0) {
+      // The moving ellipse follows the same quadratic profile as the glass wall.
+      const t = Math.sqrt(level), u = 1 - t;
+      const radius = u*u*34 + 2*u*t*116 + t*t*halfWidth;
+      const y = u*u*360 + 2*u*t*339 + t*t*rim;
+      liquid.setAttribute('opacity', level > 0 ? '1' : '0');
+      top.setAttribute('cx', center);
+      top.setAttribute('cy', y);
+      top.setAttribute('rx', radius);
+      top.setAttribute('ry', .19 * radius);
+      body.setAttribute('d', 'M'+(center-radius)+' '+y+'a'+radius+' '+(.19*radius)+' 0 0 0 '+(2*radius)+' 0v130H'+(center-radius)+'Z');
+
+      const pouring = Boolean(source) && level < 1 && !motion.matches;
+      const landedX = Math.max(center - radius*.87, Math.min(center + radius*.87, tip.x));
+      const landingY = y - .02 * radius;
+      const drop = landingY - tip.y;
+      const d = `M${tip.x} ${tip.y} q-4 6 -4 ${drop*.25} Q${tip.x-4} ${tip.y+drop*.76} ${landedX} ${landingY}`;
+      stream.setAttribute('d', d);
+      highlight.setAttribute('d', d);
+      stream.setAttribute('opacity', pouring ? '.92' : '0');
+      highlight.setAttribute('opacity', pouring ? '.85' : '0');
+      const wave = (time % 650) / 650;
+      ripple.setAttribute('cx', landedX);
+      ripple.setAttribute('cy', landingY);
+      ripple.setAttribute('rx', 2 + 12*wave);
+      ripple.setAttribute('ry', .8 + 2.3*wave);
+      ripple.setAttribute('opacity', pouring ? String(.9*(1-wave)) : '0');
+      const face = tip.x > 625 ? -1 : 1;
+      const tilt = pouring ? -17 : tip.y > 448 ? -42 : -3;
+      pot.setAttribute('transform',`translate(${tip.x} ${tip.y}) scale(${face} 1) rotate(${tilt})`);
+      pot.setAttribute('visibility', source === 'button' || poster.hasAttribute('data-pointer') ? 'visible' : 'hidden');
     }
-    function queue() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
-    if (liquid) {
+
+    function stop() {
+      source = '';
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
       paint();
-      window.addEventListener('scroll', queue, {passive:true});
-      window.addEventListener('resize', queue, {passive:true});
     }
-    motion.addEventListener('change', () => { areas.forEach(clear); paint(); });
+    function finish() {
+      level = 1;
+      stop();
+      status.textContent = 'Гайвань полна.';
+    }
+    function tick(time) {
+      level = Math.min(1, level + Math.min(80, time-lastTime)/2600);
+      if (level === 1) return finish();
+      paint(time);
+      lastTime = time;
+      frame = requestAnimationFrame(tick);
+    }
+    function pour(from) {
+      if (level === 1) return paint();
+      source = from;
+      if (motion.matches) return finish();
+      if (!frame) {
+        lastTime = performance.now();
+        status.textContent = 'Чай наливается.';
+        frame = requestAnimationFrame(tick);
+      }
+      paint(performance.now());
+    }
+    function serve() {
+      if (level === 1) return;
+      previousScroll = window.scrollY;
+      tip = {x:322, y:145};
+      pour('button');
+    }
+    function scenePoint(e) {
+      return new DOMPoint(e.clientX,e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    }
+    function openingAt(x) {
+      return rim + 30*Math.sqrt(Math.max(0,1-((x-center)/halfWidth)**2));
+    }
+    function move(e) {
+      if (e.pointerType === 'touch') return;
+      pointer = {x:e.clientX, y:e.clientY};
+      if (scrollPointer && Math.hypot(pointer.x-scrollPointer.x,pointer.y-scrollPointer.y) < 2) return;
+      scrollPointer = null;
+      const point = scenePoint(e);
+      poster.setAttribute('data-pointer','');
+      const above = Math.abs(point.x-center) < halfWidth-5 && point.y <= openingAt(point.x)+5;
+      tip = {x:point.x, y:above ? Math.min(point.y, rim-24) : point.y};
+      if (above) pour('pointer');
+      else stop();
+    }
+    poster.addEventListener('pointerenter', move);
+    poster.addEventListener('pointermove', move);
+    poster.addEventListener('pointerleave', () => {
+      poster.removeAttribute('data-pointer');
+      if (source !== 'button') stop();
+    });
+    poster.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch') touchStart = {x:e.clientX, y:e.clientY};
+    });
+    poster.addEventListener('pointercancel', () => { touchStart = null; });
+    poster.addEventListener('pointerup', e => {
+      if (!touchStart || e.pointerType !== 'touch') return;
+      const tap = Math.hypot(e.clientX-touchStart.x,e.clientY-touchStart.y) < 12;
+      touchStart = null;
+      const point = scenePoint(e);
+      if (tap && Math.abs(point.x-center) < halfWidth && point.y < 375) serve();
+    });
+    button.addEventListener('click', serve);
+    window.addEventListener('scroll', () => {
+      const distance = Math.abs(window.scrollY - previousScroll);
+      previousScroll = window.scrollY;
+      if (!distance) return;
+      scrollPointer = pointer;
+      poster.removeAttribute('data-pointer');
+      if (!level && !source) return paint();
+      const drainDistance = Math.max(190, Math.min(340, poster.clientHeight * .7));
+      level = motion.matches ? 0 : Math.max(0, level - distance / drainDistance);
+      stop();
+      status.textContent = level ? 'В гайвани остался чай.' : 'Гайвань пуста.';
+    }, {passive:true});
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && source) stop(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+    motion.addEventListener('change', () => { if (motion.matches && source) finish(); });
+    paint();
   }
 
   function setupPicker() {
@@ -213,6 +358,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    setupMenu(); setupSelection(); setupMotion(); setupPicker(); setupMaps(); setupForm();
+    setupMenu(); setupSelection(); setupMotion(); fitHeroTitles(); setupTeaPour(); setupPicker(); setupMaps(); setupForm();
   });
 })();

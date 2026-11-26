@@ -128,7 +128,7 @@ def art():
 
 
 def brand():
-    return f'<a class="brand" href="{path("")}" aria-label="Чайная высота, главная">{photo("brand-mark.webp","","brand-mark",True)}<span>Чайная<br>высота</span></a>'
+    return f'<a class="brand" href="{path("")}" aria-label="Чайная высота, главная"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ЧАЙНАЯ<br>ВЫСОТА</span></a>'
 
 
 NAV = [
@@ -391,7 +391,7 @@ def event_facts():
 
 def card(url, title, img, alt, label="", desc=""):
     return a(
-        f'<div class="card-img reactive">{photo(img,alt)}</div><div class="card-copy">{tiny(label) if label else ""}<div class="card-name"><h3>{title}</h3>{ARROW}</div>{f"<p>{desc}</p>" if desc else ""}</div>',
+        f'<div class="card-img reactive">{photo(img,alt)}</div>{tiny(label) if label else ""}<div class="card-copy"><div class="card-name"><h3>{title}</h3>{ARROW}</div>{f"<p>{desc}</p>" if desc else ""}</div>',
         url,
         "card",
         False,
@@ -447,10 +447,14 @@ def choose(label="Выбрать билет"):
     return button(label, "tickets/?event=67", 'data-choose="67"')
 
 
+def hero_title(first, second, third):
+    return f'<h1 class="hero-title"><span>{first}</span> <span>{second}</span> <em>{third}</em></h1>'
+
+
 def hero():
-    live = f"""<div data-if="live">{status("Ближайшая дегустация · № 67")}<h1>Три стиля<br>Тегуаньинь<br><em>и три Я Бао</em></h1>{event_facts()}<p class="hero-desc">{EVENT_TEXT}</p>{links(choose(),a('О встрече','schedule/67/'))}</div>"""
-    wait = f"""<div data-if="waiting">{tiny('Следующая дата пока не объявлена')}<h1>72 чайных<br>отражения<br><em>Сунь Укуна</em></h1><p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p><p class="wait-rates" data-before-expiry>Одно посещение · 2&nbsp;600&nbsp;₽ за одного или 4&nbsp;600&nbsp;₽ за двоих. Дату согласуют при активации.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
-    return f"""<section class="hero"><div class="hero-copy">{live}{wait}</div><figure class="hero-figure"><div class="poster reactive">{art()}</div><figcaption>Стекло и янтарный настой</figcaption></figure></section>"""
+    live = f"""<div data-if="live">{status("Ближайшая дегустация · № 67")}{hero_title("Три стиля", "Тегуаньинь", "и три Я Бао")}{event_facts()}<p class="hero-desc">{EVENT_TEXT}</p>{links(choose(),a('О встрече','schedule/67/'))}</div>"""
+    wait = f"""<div data-if="waiting">{tiny('Следующая дата пока не объявлена')}{hero_title("72 чайных", "отражения", "Сунь Укуна")}<p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p><p class="wait-rates" data-before-expiry>Одно посещение · 2&nbsp;600&nbsp;₽ за одного или 4&nbsp;600&nbsp;₽ за двоих. Дату согласуют при активации.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
+    return f"""<section class="hero"><div class="hero-copy">{live}{wait}</div><figure class="hero-figure"><div class="poster">{art()}</div><figcaption><span>Стеклянная гайвань</span><button type="button" class="pour-button" data-pour>Налить чай {ARROW}</button><span class="sr-only" role="status" data-pour-status></span></figcaption></figure></section>"""
 
 
 def picker():
@@ -471,10 +475,12 @@ def picker():
         ),
         quote=True,
     )
-    options = "".join(
-        f'<button type="button" class="taste" aria-pressed="false" data-taste="{i}">{t["taste"]}{ARROW}</button>'
-        for i, t in enumerate(TEAS)
-    )
+    buttons = []
+    for i, tea in enumerate(TEAS):
+        prefix, _, note = tea["taste"].partition(", ")
+        label = f'<span><span class="taste-prefix">{prefix}, </span><span class="taste-note">{note}</span></span>'
+        buttons.append(f'<button type="button" class="taste" aria-pressed="false" data-taste="{i}">{label}{ARROW}</button>')
+    options = "".join(buttons)
     fallback = " · ".join(
         a(t["name"], "tea/" + t["slug"] + "/", "inline", False) for t in TEAS
     )

@@ -890,6 +890,17 @@ a:is(:hover, :focus-visible) .track-arrow,
 .result-links .btn {
   min-height: 46px;
 }
+.dial-label {
+  display: grid;
+  gap: 3px;
+}
+.dial-label > span {
+  font-size: 0.9rem;
+}
+.dial-label strong {
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
 .result-links .text-link {
   min-height: 36px;
 }

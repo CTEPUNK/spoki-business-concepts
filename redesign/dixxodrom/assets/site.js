@@ -192,8 +192,12 @@
     if (result.note) frag.append(make('p', result.note, 'help'));
     frag.append(make('p', 'Свободное время согласуйте с прокатом.', 'help'));
     const links = make('div', undefined, 'result-links');
+    const dial = linked('', tel, 'btn primary');
+    const dialLabel = make('span', undefined, 'dial-label');
+    dialLabel.append(make('span', 'Позвонить в прокат'), make('strong', phoneLabel));
+    dial.prepend(dialLabel);
     links.append(
-      linked('Позвонить ' + phoneLabel, tel, 'btn primary'),
+      dial,
       linked('Контакты и маршрут', 'contacts.html?' + params + '#rental', 'text-link'),
     );
     frag.append(links);

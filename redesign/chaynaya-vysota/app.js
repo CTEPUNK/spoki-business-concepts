@@ -139,8 +139,10 @@
     const part = name => svg.querySelector('[data-' + name + ']');
     const liquid = part('liquid'), body = part('tea-body'), top = part('tea-top');
     const stream = part('stream'), highlight = part('stream-light'), ripple = part('ripple'), pot = part('pot');
-    const button = document.querySelector('[data-pour]');
     const status = document.querySelector('[data-pour-status]');
+    poster.tabIndex = 0;
+    poster.setAttribute('role', 'button');
+    poster.setAttribute('aria-label', 'Наполнить гайвань чаем');
     const center = 312, rim = 248, halfWidth = 155;
     let level = 0, source = '', tip = {x:318, y:145};
     let frame = 0, lastTime = 0, previousScroll = window.scrollY;
@@ -176,7 +178,7 @@
       const face = tip.x > 625 ? -1 : 1;
       const tilt = pouring ? -17 : tip.y > 448 ? -42 : -3;
       pot.setAttribute('transform',`translate(${tip.x} ${tip.y}) scale(${face} 1) rotate(${tilt})`);
-      pot.setAttribute('visibility', source === 'button' || poster.hasAttribute('data-pointer') ? 'visible' : 'hidden');
+      pot.setAttribute('visibility', source === 'direct' || poster.hasAttribute('data-pointer') ? 'visible' : 'hidden');
     }
 
     function stop() {
@@ -209,11 +211,11 @@
       }
       paint(performance.now());
     }
-    function serve() {
+    function serve(x = center) {
       if (level === 1) return;
       previousScroll = window.scrollY;
-      tip = {x:322, y:145};
-      pour('button');
+      tip = {x, y:145};
+      pour('direct');
     }
     function scenePoint(e) {
       return new DOMPoint(e.clientX,e.clientY).matrixTransform(svg.getScreenCTM().inverse());
@@ -237,7 +239,7 @@
     poster.addEventListener('pointermove', move);
     poster.addEventListener('pointerleave', () => {
       poster.removeAttribute('data-pointer');
-      if (source !== 'button') stop();
+      if (source !== 'direct') stop();
     });
     poster.addEventListener('pointerdown', e => {
       if (e.pointerType === 'touch') touchStart = {x:e.clientX, y:e.clientY};
@@ -248,9 +250,16 @@
       const tap = Math.hypot(e.clientX-touchStart.x,e.clientY-touchStart.y) < 12;
       touchStart = null;
       const point = scenePoint(e);
-      if (tap && Math.abs(point.x-center) < halfWidth && point.y < 375) serve();
+      if (tap && Math.abs(point.x-center) < halfWidth && point.y < 375) serve(point.x);
     });
-    button.addEventListener('click', serve);
+    poster.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      if (!e.repeat) serve();
+    });
+    poster.addEventListener('click', e => {
+      if (e.detail === 0) serve();
+    });
     window.addEventListener('scroll', () => {
       const distance = Math.abs(window.scrollY - previousScroll);
       previousScroll = window.scrollY;

@@ -7,6 +7,7 @@
 }
 * { box-sizing: border-box }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.56 var(--sans); text-rendering: optimizeLegibility }
+body:has(.hero) { overflow-x:clip; container-type:inline-size }
 ::selection { background: transparent; color: #a73f22 }
 .footer ::selection,.picker ::selection,.button::selection { color: #ffcd94 }
 [hidden],.has-date [data-if="waiting"],.no-date [data-if="live"],.no-js [data-if="live"],.unexpired [data-after-expiry],.expired [data-before-expiry],.no-js [data-after-expiry] { display: none!important }
@@ -44,8 +45,17 @@ a:hover .arrow,a:focus-visible .arrow,button:hover .arrow,button:focus-visible .
 .mag-face { display:inline-flex; padding:8px 16px; align-items:center; gap:9px; border:1px solid #879380; border-radius:30px; font-size:1rem; font-weight:550; transform:translate(var(--mx,0px),var(--my,0px)); transition:transform .12s ease-out, background .18s }
 .mag:hover .mag-face,.mag:focus-visible .mag-face { background:var(--sage) }
 .menu-button,.mobile-extra { display:none }
-.hero { display:grid; grid-template-columns:minmax(0,.87fr) minmax(0,1.13fr); align-items:center; gap:clamp(24px,4vw,80px); padding:clamp(37px,4.2vw,72px) 0 clamp(38px,4.2vw,76px) }
-.hero-copy { width:100%; max-width:28.5rem }
+.hero {
+  --scene-left:clamp(38px,8vw,136px); --scene-right:min(var(--gutter),80px);
+  position:relative; isolation:isolate; display:grid; grid-template-columns:minmax(0,.87fr) minmax(0,1.13fr);
+  align-items:center; gap:clamp(24px,4vw,80px); min-height:calc(100svh - var(--nav-height) - 1px); padding-block:clamp(32px,3.4vw,52px);
+}
+.hero::before {
+  content:""; position:absolute; z-index:-1; inset:0 auto 0 50%; width:100cqw; transform:translateX(-50%); pointer-events:none;
+  background:radial-gradient(ellipse 51% 51% at calc(50% + min(26vw,420px)) 52%,#dce2cd,transparent 92%),
+             radial-gradient(ellipse 43% 34% at calc(50% + min(29vw,470px)) 35%,#efe2c8,transparent 96%);
+}
+.hero-copy { position:relative; z-index:1; width:100%; max-width:28.5rem }
 .hero-title { container-type:inline-size; width:100%; margin:clamp(17px,1.65vw,26px) 0; font-size:1rem; letter-spacing:normal; text-wrap:initial; text-rendering:geometricPrecision }
 .hero-title>* { display:block; white-space:nowrap; line-height:1.08; letter-spacing:-.03em }
 .hero-title>:first-child { font-size:26.05cqi }
@@ -68,14 +78,15 @@ a:hover .arrow,a:focus-visible .arrow,button:hover .arrow,button:focus-visible .
 .text-link,.plain,.inline { font-size:1rem; font-weight:520; text-decoration:underline; text-decoration-color:rgba(85,98,82,.72); text-underline-offset:4px; text-decoration-thickness:1px }
 .text-link { display:inline-flex; align-items:center; gap:7px; padding-block:6px }
 .text-link:hover,.inline:hover,.plain:hover { color:var(--brick); text-decoration-color:currentColor }
-.hero-figure { align-self:stretch; display:flex; flex-direction:column; justify-content:center }
-.poster { overflow:hidden; isolation:isolate; background:#d5dcc5; touch-action:pan-y pinch-zoom; user-select:none }
+.hero-figure { min-width:0; align-self:stretch; display:flex; flex-direction:column; justify-content:center }
+.poster {
+  width:calc(100% + var(--scene-left) + var(--scene-right)); margin-inline:calc(-1 * var(--scene-left)) calc(-1 * var(--scene-right));
+  overflow:hidden; isolation:isolate; background:transparent; touch-action:pan-y pinch-zoom; user-select:none;
+}
 .poster>.cup-art { width:100%; height:auto; pointer-events:none }
+.poster:focus-visible { outline:none }
+.poster:focus-visible .bowl-rim { stroke:var(--brick); stroke-width:4 }
 figcaption { color:var(--muted); font-size:.9rem; margin-top:9px; line-height:1.45 }
-.hero-figure figcaption { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:36px; margin-top:3px }
-.pour-button { display:inline-flex; align-items:center; gap:6px; padding:8px 0 8px 10px; background:none; border:0; color:var(--green); font-size:inherit; font-weight:550; text-underline-offset:4px }
-.pour-button:hover,.pour-button:focus-visible { text-decoration:underline }
-.no-js .pour-button { display:none }
 .section { padding:clamp(34px,4.25vw,68px) 0; border-top:1px solid var(--line) }
 .section-head { display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin:0 0 clamp(22px,2.5vw,36px) }
 .cards { display:grid; gap:clamp(16px,2.2vw,36px); align-items:start }
@@ -86,6 +97,15 @@ figcaption { color:var(--muted); font-size:.9rem; margin-top:9px; line-height:1.
 .card-img { aspect-ratio:1.49 }
 .card-img img,.feature-img img,.pick-photo img,.archive-photo img,.full-photo img { width:100%; height:100%; object-fit:cover }
 .card-img img,.feature-img img,.pick-photo img { object-position:var(--crop,50% 50%); transition:transform .4s ease-out,filter .3s ease; transform:scale(1.025) translate(var(--shiftX,0%),var(--shiftY,0%)) }
+.pick-photo,.feature-img,.archive-photo img,.full-photo img,.photo-link>.reactive {
+  mask-image:url("assets/photo-fade.svg"),
+             linear-gradient(90deg,transparent,#000 7% 93%,transparent),
+             linear-gradient(0deg,transparent,#000 7% 93%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+  mask-size:100% 100%;
+  mask-repeat:no-repeat;
+}
 img[src$="ice-pancake.webp"] { --crop:50% 77% }
 img[src$="tea-jinxuan-leaf.webp"] { --crop:48% 64% }
 img[src$="chef-enin.webp"] { --crop:50% 33% }
@@ -102,11 +122,11 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
 .card-name h3 { font-size:inherit }
 .card-name .arrow { width:23px; height:23px; margin-top:calc((1.01em - 23px)/2) }
 .card-copy>p:not(.kicker) { color:var(--muted); margin-top:8px }
-.picker { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); gap:22px 5%; padding:clamp(25px,4.5vw,76px); background:#294637; color:var(--cream); border-radius:3px; margin:14px 0 clamp(40px,5vw,78px); align-items:center }
+.picker { --picker-pad:clamp(25px,4.5vw,76px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); gap:22px 5%; padding:var(--picker-pad); background:#294637; color:var(--cream); border-radius:3px; margin:14px 0 clamp(40px,5vw,78px); align-items:center }
 .picker h2 { margin:.22em 0 .32em }
 .picker .kicker,.picker .picker-copy>p:not(.kicker),.picker .result-desc { color:#e2e6cf }
 .picker-copy>p { max-width:43ch }
-.pick-photo { grid-column:2; grid-row:1 / span 2; aspect-ratio:1.35; width:100% }
+.pick-photo { grid-column:2; grid-row:1 / span 2; aspect-ratio:1.45; width:calc(100% + var(--picker-pad)); margin-inline-end:calc(-1 * var(--picker-pad)) }
 .picker-copy { min-width:0; container-type:inline-size }
 .picker .taste-options { display:flex; flex-wrap:nowrap; gap:clamp(3px,1.3cqi,9px); margin-top:20px }
 .taste { padding:8px clamp(7px,2.3cqi,16px); min-height:44px; display:inline-flex; justify-content:center; gap:7px; align-items:center; white-space:nowrap; background:transparent; color:#fffdf4; border:1px solid #a4b29a; border-radius:25px; font-size:1rem }
@@ -135,12 +155,12 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
 .event-row:hover strong,.row-link:hover strong { color:var(--brick) }
 .footer { background:var(--footer-green); color:#f6f4e4; padding-top:40px; margin-top:clamp(30px,4.6vw,76px) }
 .footer-inner { display:grid; grid-template-columns:1.26fr repeat(3,1fr); gap:25px; padding-block:16px 38px }
-.footer .brand { --mark-field:#fff; --mark-script:var(--footer-green); padding:5px 12px 5px 5px; border-radius:28px 3px 3px 28px; background:#fff }
+.footer .brand { --mark-field:#fff; --mark-script:var(--footer-green); color:#fff }
 .footer-inner p { font-size:.94rem; margin:10px 0; color:#d6dec9 }
 .footer nav p { font-weight:650; color:var(--cream); margin:0 0 11px }
 .footer nav a { display:block; font-size:.99rem; padding:3px 0; text-underline-offset:4px }
 .footer nav a:hover { text-decoration:underline }
-.foot-line { display:flex; justify-content:flex-end; gap:12px; padding-block:17px; border-top:1px solid #526753; font-size:.88rem; color:#d4dec8 }
+.foot-line { display:flex; justify-content:center; text-align:center; padding-block:17px; border-top:1px solid #526753; font-size:.88rem; color:#d4dec8 }
 .crumbs { margin:26px 0 0; display:flex; flex-wrap:wrap; gap:5px 9px; align-items:center; font-size:.89rem; color:var(--muted) }
 .crumbs a:hover { text-decoration:underline }
 .intro { max-width:1050px; padding:33px 0 32px }
@@ -160,18 +180,37 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
 .callout p,.note p { max-width:69ch; margin:.4em 0 .8em }
 .row-link { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:16px 0; border-top:1px solid var(--line) }
 .row-link small { margin-top:4px }
-.tickets-layout { display:grid; grid-template-columns:minmax(160px,.29fr) 1fr; gap:clamp(16px,3vw,56px); align-items:start; margin-bottom:50px }
+.tickets-layout { display:grid; grid-template-columns:minmax(160px,.29fr) minmax(0,1fr); gap:clamp(16px,3vw,56px); align-items:start; margin-bottom:50px }
 .ticket-tabs { display:flex; flex-direction:column; align-items:stretch; gap:3px }
 .ticket-tab { font-weight:530; border-radius:2px; padding:9px 14px }
 .ticket-tab:hover,.ticket-tab.selected { background:var(--sage) }
 .ticket-tab.selected { box-shadow:inset 3px 0 var(--brick) }
-.ticket { display:grid; grid-template-columns:minmax(0,1fr) 48px; background:#f1ecdd; border:1px solid #c9c5b7; border-radius:5px }
-.ticket-body { padding:clamp(20px,3.5vw,50px) }
-.ticket-title { display:flex; gap:12px 22px; flex-wrap:wrap; align-items:baseline; justify-content:space-between; margin:.36em 0 .5em }
-.ticket-title h2 { font-size:clamp(2.3rem,4vw,4rem) }
-.ticket-title>strong { white-space:nowrap; color:var(--brick); font:600 clamp(1.9rem,3.5vw,3.5rem)/1 var(--serif) }
-.ticket-stub { border-left:1px dashed #a5a28f; display:flex; align-items:center; justify-content:space-between; padding:18px 8px; flex-direction:column }
-.ticket-stub span { writing-mode:vertical-rl; font-size:.77rem; font-weight:600; letter-spacing:.14em }
+.ticket { --stock:#f1ecdd; display:grid; grid-template-columns:minmax(0,1fr) 48px; background:var(--stock); border:1px solid #c9c5b7; border-radius:5px }
+.ticket-body { min-width:0; padding:clamp(20px,3.5vw,50px); container-type:inline-size }
+.ticket-title { font-size:clamp(2rem,8.6cqi,4rem); margin:0 0 .26em }
+.ticket-purchase {
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"buy help price";
+  align-items:center; justify-items:start; gap:8px clamp(12px,2cqi,24px);
+}
+.ticket-purchase .button { grid-area:buy }
+.purchase-help { grid-area:help }
+.purchase-alternative { grid-column:1 / 3; grid-row:1 }
+.ticket-price { grid-area:price; justify-self:end; text-align:right; white-space:nowrap; color:var(--brick); font:560 clamp(1.55rem,3.6cqi,2.3rem)/1.1 var(--sans); letter-spacing:-.04em }
+@container (max-width:485px) {
+ .ticket-purchase { grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"buy price" "help ."; column-gap:10px; row-gap:2px }
+ .ticket-purchase .button { gap:8px; padding-inline:13px }
+ .purchase-alternative { grid-column:1 }
+}
+@container (max-width:320px) {
+ .ticket-title { font-size:clamp(1.625rem,12.1cqi,2rem) }
+ .ticket-purchase { column-gap:6px }
+ .ticket-price { font-size:clamp(17px,7.5cqi,23px) }
+ .ticket-purchase .button { padding-inline:clamp(7px,3cqi,12px); font-size:clamp(.875rem,5.1cqi,1rem) }
+ .ticket-purchase .button .arrow { display:none }
+}
+.ticket-stub { position:relative; border-left:1px dashed #a5a28f; display:flex; align-items:center; justify-content:space-between; padding:18px 8px; flex-direction:column }
+.ticket-stub span { writing-mode:vertical-rl; white-space:nowrap; font-size:.77rem; font-weight:600; letter-spacing:.14em }
+.ticket-stub .stub-type { position:absolute; top:50%; left:-.5px; transform:translate(-50%,-50%); padding-inline:8px; background:var(--stock); text-transform:uppercase; font-size:.67rem; line-height:1; letter-spacing:.09em; color:var(--muted) }
 .ticket-stub i { width:18px; height:64px; background:repeating-linear-gradient(0deg,#6f705b 0 1px,transparent 1px 4px,#6f705b 4px 6px,transparent 6px 10px); opacity:.7 }
 .facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; border-block:1px solid #c2c4b4; padding:18px 0; margin:20px 0 }
 .facts dt { color:var(--muted); font-size:.9rem }
@@ -216,7 +255,7 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
  .menu-button { display:grid; place-items:center; border:1px solid var(--line); background:transparent; border-radius:50%; width:42px; height:42px }
  .main-nav { position:absolute; display:none; top:100%; left:0; right:0; background:var(--paper); border-bottom:1px solid var(--line); padding:10px var(--gutter) 18px; gap:0; max-height:calc(100dvh - var(--nav-height)); overflow:auto }
  .main-nav.open { display:grid }.mobile-extra { display:block }.navlink { padding:9px 3px; border-bottom:1px solid #dddcd1 }
- .hero { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; padding-top:30px }
+ .hero { --scene-left:5vw; --scene-right:var(--gutter); grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px }
  .footer-inner { grid-template-columns:repeat(2,1fr) }
  .journal-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
  .ticket-stub { padding:15px 5px }.ticket { grid-template-columns:minmax(0,1fr) 30px }
@@ -224,17 +263,18 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
 @media(max-width:620px) {
  body { font-size:16px }
  .mast-actions { gap:3px }.mag-face { padding:6px 11px }.brand { gap:7px }.brand-mark { height:36px; width:36px }
- .hero { grid-template-columns:1fr; gap:23px; padding:28px 0 29px }
+ .hero { --scene-left:var(--gutter); --scene-right:var(--gutter); grid-template-columns:1fr; min-height:auto; gap:8px; padding:28px 0 30px }
+ .hero::before { background:radial-gradient(ellipse 62% 24% at 52% 75%,#dce2cd,transparent),radial-gradient(ellipse 57% 20% at 53% 77%,#f3e6ce,transparent) }
+ .poster { margin-top:-10px }
  .hero-copy { max-width:25rem }.hero-title { margin:12px 0 16px }
  .hero-desc { margin:.7em 0 1em; max-width:42ch }
  .hero .actions { gap:8px 15px }
  .hero .button { padding-inline:16px; gap:13px }
  .eyebrow,.kicker { font-size:.78rem }.event-meta { gap:6px 11px; font-size:.94rem }.event-meta .icon { width:15px; height:15px }
- .hero-figure figcaption { font-size:.88rem }.pour-button { min-height:44px }
  .section-head { gap:10px; flex-wrap:wrap }.section-head .text-link { margin-left:auto }
  .cards.three,.cards.two { grid-template-columns:1fr; gap:17px }
  .card-img { aspect-ratio:1.65 }.card>.kicker{margin-top:10px}.card-copy{padding-bottom:2px}
- .picker { grid-template-columns:1fr; padding:22px 18px; gap:17px }.pick-photo { grid-column:1; grid-row:auto; aspect-ratio:1.7 }.pick-result { grid-row:3 }
+ .picker { --picker-pad:18px; grid-template-columns:minmax(0,1fr); padding:22px var(--picker-pad); gap:17px }.pick-photo { grid-column:1; grid-row:auto; aspect-ratio:1.7; width:calc(100% + 2 * var(--picker-pad)); margin-inline:calc(-1 * var(--picker-pad)) }.pick-result { grid-row:3 }
  .event-row { grid-template-columns:70px 1fr auto; gap:9px }.list-date { font-size:1.35rem }
  .footer-inner { gap:20px 13px }.foot-line { font-size:.8rem }
  .crumbs { margin-top:17px }.intro { padding:24px 0 }.intro>p:not(.kicker) { font-size:1rem }
@@ -243,8 +283,8 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
  .ticket-tabs { flex-direction:row; gap:6px; flex-wrap:wrap }
  .ticket-tab { border:1px solid var(--line); border-radius:22px; font-size:.94rem; padding:7px 11px }
  .ticket-tab.selected { background:var(--green); color:var(--cream); box-shadow:none }
- .ticket-body { padding:17px 14px }.ticket { grid-template-columns:minmax(0,1fr) 21px }.ticket-stub i { width:11px }
- .ticket-title { gap:4px 14px }.facts { gap:12px }
+ .ticket-body { padding:17px 14px }.ticket { grid-template-columns:minmax(0,1fr) 25px }.ticket-stub i { width:11px }
+ .facts { gap:12px }
  .photo-pair { gap:10px }.venue-contacts,.journal-grid { grid-template-columns:1fr }
  .gallery-cards .card-img { aspect-ratio:1.18 }.ice-cards .card-img { aspect-ratio:1.35 }
 }
@@ -258,25 +298,19 @@ img[src$="venue-tverskaya.webp"] { --crop:50% 23% }
 @media(hover:hover) and (pointer:fine) {
  body { cursor:url("assets/cursor.svg") 3 2,auto }
  :is(p,h1,h2,h3,dt,dd,label,figcaption,li,input,textarea) { cursor:text }
- :is(a,button,summary,select),:is(a,button,summary) * { cursor:pointer }
+ :is(a,button,summary,select),:is(a,button,summary,select) * { cursor:url("assets/spoon.svg") 13 2,pointer }
  .poster[data-pointer] { cursor:none }
 }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap }
-.wait-rates { color:var(--muted); max-width:43ch; margin:0 0 15px }
 .crumbs + .sr-only + .picker { margin-top:24px }
 .phone-label { color:var(--muted); font-size:.9rem }
-.more-tickets { margin-top:4px }
-.more-tickets summary { padding:8px 14px; cursor:pointer; color:var(--muted); font-size:1rem }
-.more-tickets div { display:flex; flex-direction:column; gap:3px }
-.ticket-title>strong { font-family:var(--sans); font-size:clamp(1.55rem,2.3vw,2.3rem); letter-spacing:-.045em; font-weight:560 }
 .photo-link { display:grid; grid-template-columns:minmax(120px,240px) minmax(150px,530px); gap:clamp(15px,3vw,48px); align-items:center; border-top:1px solid var(--line); padding-block:26px; margin-top:24px }
 .photo-link .reactive,.venue-img { overflow:hidden }
 .photo-link img,.venue-img img { width:100%; aspect-ratio:1.65; object-fit:cover; object-position:var(--crop,50% 50%); transform:scale(1.025) translate(var(--shiftX,0%),var(--shiftY,0%)); transition:transform .3s ease }
 .venue-img { max-width:560px; margin-bottom:13px }
 .venue-img img { aspect-ratio:2.2 }
 @media(max-width:620px) {
- .more-tickets { margin:0; flex-basis:100% }.more-tickets summary { display:list-item; padding:6px 4px }
- .more-tickets div { flex-direction:row; flex-wrap:wrap; gap:6px; margin:5px 0 }.photo-link { grid-template-columns:.7fr 1.3fr }
+ .photo-link { grid-template-columns:.7fr 1.3fr }
  .photo-link p { font-size:.95rem }.photo-link img { aspect-ratio:1.03 }.venue-img img { aspect-ratio:1.85 }
 }
 .no-js #request-form,.no-js .taste-options,.no-js .contact-controls {display:none}

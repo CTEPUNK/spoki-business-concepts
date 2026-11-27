@@ -72,7 +72,7 @@ def contact_link():
     return (
         a("+7 903 010-80-30", "tel:+79030108030", "inline", False)
         + " или "
-        + a("Telegram чайного шефа", ACTIVATE, "inline", False)
+        + a("Telegram&nbsp;чайного&nbsp;шефа", ACTIVATE, "inline", False)
     )
 
 
@@ -453,8 +453,8 @@ def hero_title(first, second, third):
 
 def hero():
     live = f"""<div data-if="live">{status("Ближайшая дегустация · № 67")}{hero_title("Три стиля", "Тегуаньинь", "и три Я Бао")}{event_facts()}<p class="hero-desc">{EVENT_TEXT}</p>{links(choose(),a('О встрече','schedule/67/'))}</div>"""
-    wait = f"""<div data-if="waiting">{tiny('Следующая дата пока не объявлена')}{hero_title("72 чайных", "отражения", "Сунь Укуна")}<p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p><p class="wait-rates" data-before-expiry>Одно посещение · 2&nbsp;600&nbsp;₽ за одного или 4&nbsp;600&nbsp;₽ за двоих. Дату согласуют при активации.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
-    return f"""<section class="hero"><div class="hero-copy">{live}{wait}</div><figure class="hero-figure"><div class="poster">{art()}</div><figcaption><span>Стеклянная гайвань</span><button type="button" class="pour-button" data-pour>Налить чай {ARROW}</button><span class="sr-only" role="status" data-pour-status></span></figcaption></figure></section>"""
+    wait = f"""<div data-if="waiting">{hero_title("72 чайных", "отражения", "Сунь Укуна")}<p class="hero-desc">На Тверской чайный шеф сравнивает несколько сортов за одну встречу. Новую дату чайная объявит в своём канале.</p>{links(button('Выбрать билет','tickets/'),a('Узнать дату',CHANNEL))}</div>"""
+    return f"""<section class="hero"><div class="hero-copy">{live}{wait}</div><figure class="hero-figure"><div class="poster">{art()}</div><span class="sr-only" role="status" data-pour-status></span></figure></section>"""
 
 
 def picker():
@@ -484,7 +484,7 @@ def picker():
     fallback = " · ".join(
         a(t["name"], "tea/" + t["slug"] + "/", "inline", False) for t in TEAS
     )
-    return f"""<section class="picker" id="picker" data-picker="{data}"><div class="picker-copy">{tiny('Из чайной коллекции')}<h2 tabindex="-1">Подобрать чай</h2><p>Какой вкус хочется сегодня? Выберите оттенок, и мы покажем чай из коллекции.</p><div class="taste-options">{options}</div><noscript><p>{fallback}</p></noscript></div><figure class="pick-photo reactive">{photo("tea-green-infusion.webp","Настой Тайпин Хоукуй из коллекции клуба")}</figure><div class="pick-result" hidden><div aria-live="polite"><p class="kicker">Ваш чай</p><h3></h3><p class="result-desc"></p></div><div class="actions"><a class="text-link result-link">О чае{ARROW}</a><button class="plain" type="button" data-again>Выбрать другой вкус</button></div>{resume()}</div></section>"""
+    return f"""<section class="picker" id="picker" data-picker="{data}"><div class="picker-copy">{tiny('Из чайной коллекции')}<h2 tabindex="-1">Подобрать чай</h2><p>Какой вкус хочется сегодня? Выберите оттенок, и мы покажем чай из коллекции.</p><div class="taste-options">{options}</div><noscript><p>{fallback}</p></noscript></div><figure class="pick-photo reactive">{photo("tea-green-infusion.webp","Настой Тайпин Хоукуй из коллекции клуба")}</figure><div class="pick-result" hidden><div aria-live="polite"><h3></h3><p class="result-desc"></p></div><div class="actions"><a class="text-link result-link">О чае{ARROW}</a><button class="plain" type="button" data-again>Выбрать другой вкус</button></div>{resume()}</div></section>"""
 
 
 def home():
@@ -651,24 +651,18 @@ def cycle():
 
 def ticket_view(t):
     is_express = t["slug"] == "express"
-    options = [
+    tabs = "".join(
         a(
-            x["short"],
+            x["short"] + ('<span data-if="waiting"> · архив</span>' if x["slug"] == "express" else ""),
             ticket_route(x),
             "ticket-tab" + (" selected" if t == x else ""),
             False,
             ('aria-current="page" ' if t == x else "")
             + 'data-variant="'
             + x["slug"]
-            + '"'
-            + (' data-if="live"' if x["slug"] == "express" else ""),
+            + '"',
         )
         for x in TICKETS
-    ]
-    expanded = " open" if t in TICKETS[3:] else ""
-    tabs = (
-        "".join(options[:3])
-        + f'<details class="more-tickets"{expanded}><summary>Другие билеты</summary><div>{"".join(options[3:])}</div></details>'
     )
     official = "https://teatix.com/product/" + t["product"]
     selected = f'<p class="context" data-if="live" data-selected-meeting hidden>Вы выбрали встречу № 67 · 26 ноября, 20:00 · Тверская, 6, стр. 1</p>'
@@ -698,24 +692,22 @@ def ticket_view(t):
         + contact_link()
         + "."
     )
-    availability = ' data-if="live"' if is_express else " data-before-expiry"
-    checkout = f'<div{availability}>{links(button("Купить на Teatix",official,"data-seller"),a("Как купить","tickets/how/"))}</div>'
     if is_express:
-        checkout += (
-            '<div data-if="waiting">'
-            + note("Встреча 26 ноября прошла. Этот экспресс-билет завершил действие.")
-            + a("Выбрать билет с открытой датой", "tickets/")
-            + "</div>"
-        )
+        available, ended = 'data-if="live"', 'data-if="waiting"'
+        notice = "Встреча 26 ноября прошла. Этот экспресс-билет завершил действие."
+        alternative, destination = "Выбрать билет с открытой датой", "tickets/"
     else:
-        checkout += (
-            "<div data-after-expiry>"
-            + note(
-                "Указанный билет действовал до 28 февраля 2027 года. Уточните действующие условия у чайной."
-            )
-            + a("Уточнить у чайной", ACTIVATE)
-            + "</div>"
-        )
+        available, ended = "data-before-expiry", "data-after-expiry"
+        notice = "Указанный билет действовал до 28 февраля 2027 года. Уточните действующие условия у чайной."
+        alternative, destination = "Уточнить у чайной", ACTIVATE
+    checkout = (
+        f'<div {ended}>{note(notice)}</div>'
+        + '<div class="ticket-purchase">'
+        + button("Купить на Teatix", official, f"data-seller {available}")
+        + a("Как купить", "tickets/how/", "text-link purchase-help", attr=available)
+        + a(alternative, destination, "text-link purchase-alternative", attr=ended)
+        + f'<strong class="ticket-price">{t["price"]}</strong></div>'
+    )
     return (
         intro(
             [("Условия билетов", None)],
@@ -723,7 +715,9 @@ def ticket_view(t):
             "72 чайных отражения Сунь Укуна · чайная на Тверской",
         )
         + selected
-        + f"""<div class="tickets-layout" data-ticket-page="{t["slug"]}"><nav class="ticket-tabs" aria-label="Тип билета">{tabs}</nav><article class="ticket"><div class="ticket-body">{tiny('Билет на дегустацию')}<div class="ticket-title"><h2>{t["name"]}</h2><strong>{t["price"]}</strong></div><p>{t["text"]}</p>{details}<div class="ticket-rule"><strong>{booking}</strong><p>{activation}</p></div>{checkout}</div><div class="ticket-stub"><span>ЧАЙНАЯ ВЫСОТА</span><i aria-hidden="true"></i></div></article></div>"""
+        + f"""<div class="tickets-layout" data-ticket-page="{t["slug"]}"><nav class="ticket-tabs" aria-label="Тип билета">{tabs}</nav>
+<article class="ticket"><div class="ticket-body"><h2 class="ticket-title">{t["name"]}</h2><p>{t["text"]}</p>{details}<div class="ticket-rule"><strong>{booking}</strong><p>{activation}</p></div>{checkout}</div>
+<div class="ticket-stub"><span class="stub-type">Билет на дегустацию</span><span>ЧАЙНАЯ ВЫСОТА</span><i aria-hidden="true"></i></div></article></div>"""
         + group(
             "После покупки",
             (
